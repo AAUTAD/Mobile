@@ -5,23 +5,13 @@ import { MemberForm } from "~/components/members-form"
 import { Button } from "~/components/ui/button"
 import Link from "next/link"
 import { api } from "~/trpc/react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
-import { Pencil, Trash2 } from "lucide-react"
-import { useState } from "react"
-import { Member } from "~/types/member"
-import { Badge } from "~/components/ui/badge"
 import { toast } from "sonner"
 
 export default function MembersPage() {
-    const [editingMember, setEditingMember] = useState<Member | null>(null)
-    const [editOpen, setEditOpen] = useState<boolean>(false)
-    const { data: members, isLoading } = api.members.getAll.useQuery();
-
     const utils = api.useUtils()
     const { mutate: deleteMutation } = api.members.delete.useMutation({
-        onSuccess: () => {
-            utils.members.getAll.invalidate()
+        onSuccess: async () => {
+            await utils.members.getAll.invalidate()
             toast.success("Member deleted successfully")
         },
         onError: (error) => {
@@ -29,6 +19,7 @@ export default function MembersPage() {
         }
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleDelete = (id: string): void => {
         deleteMutation(id)
     }

@@ -6,21 +6,18 @@ import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
-import { Tag } from "~/types/tag";
-import { useState } from "react";
 import { toast } from "sonner";
 
 export default function TagsPage() {
-    const { data: tags, isLoading } = api.tags.getAll.useQuery();
-    const [editingTag, setEditingTag] = useState<Tag | null>(null)
+    const { data: tags } = api.tags.getAll.useQuery();
 
     const utils = api.useUtils()
     const { mutate: deleteMutation, isPending: isDeleting } = api.tags.delete.useMutation({
-        onSuccess: () => {
-            utils.tags.getAll.invalidate()
+        onSuccess: async () => {
+            await utils.tags.getAll.invalidate()
             toast.success("Tag removida com sucesso")
         },
-        onError: (error) => {
+        onError: () => {
             toast.error("Erro ao remover tag")
         }
     })

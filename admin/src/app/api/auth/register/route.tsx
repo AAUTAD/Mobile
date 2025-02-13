@@ -1,16 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { createTRPCContext } from "~/server/api/trpc";
+import { NextResponse } from "next/server";
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-    ) {
-        if(req.method === "POST") {
-            // send mutation to tRPC
-
-
-        } else {
-            res.setHeader("Allow", ["POST"])
-            res.status(405).end(`Method ${req.method} Not Allowed`)
-        }
-}
+export const POST = async () => {
+    // send mutation to tRPC
+    return NextResponse.json({ success: true }, { status: 200 });
+};

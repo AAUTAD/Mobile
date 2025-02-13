@@ -5,7 +5,7 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
-import { SidebarHeader, SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
+import { SidebarProvider } from "~/components/ui/sidebar";
 import { AdminSidebar } from "~/components/AdminSidebar";
 import { Toaster } from "sonner";
 

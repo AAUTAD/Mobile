@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Users, ShoppingCart, BarChart, Settings, LogOut, Tags } from "lucide-react"
+import { Home, Users, LogOut, Tags } from "lucide-react"
 import Link from "next/link"
 import {
   Sidebar,
@@ -14,8 +14,9 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from "~/components/ui/sidebar"
+import Image from "next/image"
 
-import { signOut } from "~/server/auth"
+//import { signOut } from "~/server/auth"
 
 const navItems = [
   { icon: Home, label: "Dashboard", href: "/" },
@@ -29,7 +30,7 @@ export function AdminSidebar() {
     <Sidebar className="bg-gray-200">
       <SidebarHeader>
         <Link href={"/"}>
-          <img src="/aautad-header.png" alt="Logo" className="w-fit h-auto" />
+          <Image src="/aautad-header.png" alt="Logo" className="w-fit h-auto" />
         </Link>
       </SidebarHeader>
       <SidebarContent>

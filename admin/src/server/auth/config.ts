@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { compare } from "bcrypt";
+import * as bcrypt from 'bcryptjs';
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -39,7 +39,7 @@ export const authConfig = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const user = await db.user.findFirst({
           where: {
             email: credentials?.email as string,
@@ -47,7 +47,12 @@ export const authConfig = {
         });
 
         if(user && credentials.password) {
-          const isValid = await compare(credentials.password as string, user.password as string);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          if (!user.password) {
+            return null;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const isValid = await bcrypt.compare(credentials.password as string, user.password);
           if(isValid) {
           return user;
           }

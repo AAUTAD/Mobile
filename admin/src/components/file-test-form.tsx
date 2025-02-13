@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image";
 
 import { useState } from "react";
 import { getSignedURL } from "~/lib/aws";
@@ -66,7 +67,7 @@ export function FileTestForm() {
                 {fileUrl && file && (
                     <div>
                         {file.type.startsWith("image") ? (
-                            <img src={fileUrl} alt={file.name} />
+                            <Image src={fileUrl} alt={file.name} />
                         ): (<div>{file.name}</div>)
                         }
                     </div>

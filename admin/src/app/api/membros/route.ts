@@ -1,15 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
 import { api } from '~/trpc/server';
-import { sendEmail } from '~/lib/email';
-import crypto from 'crypto';
-import { CardStatus, Member, PaymentStatus } from '~/types/member';
 import jwt from 'jsonwebtoken';
 import { memberSchema } from '~/schemas/member-schema';
 
 // Function gets email and verification_token from request body
 // Sends an email with a token if the member exists
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request) {
+    /* eslint-disable */
     const data = await req.json()
     const { email, verification_token } = data;
 
@@ -47,7 +44,7 @@ export async function POST(req: Request, res: NextApiResponse) {
 
         const zodMember = memberSchema.parse(member);
 
-        const result = await api.members.createAccess({ member: zodMember, token: token, verification_token: verification_token });
+        await api.members.createAccess({ member: zodMember, token: token, verification_token: verification_token });
 
         return NextResponse.json({ success: true }, { status: 200 });
     }

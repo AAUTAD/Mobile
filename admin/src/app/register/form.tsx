@@ -1,10 +1,10 @@
 "use client"
 
-import { FormEvent } from "react";
+import { type FormEvent } from "react";
 import { api } from "~/trpc/react";
 
 export default function Form() {
-    const { mutate, error } = api.auth.register.useMutation()
+    const { mutate } = api.auth.register.useMutation()
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)

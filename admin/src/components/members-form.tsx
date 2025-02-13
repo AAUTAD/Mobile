@@ -1,14 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { Textarea } from "./ui/textarea"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form"
 import { memberSchema } from "~/schemas/member-schema"
-import { CardStatus, Member, PaymentStatus } from "~/types/member"
+import { CardStatus, type Member, PaymentStatus } from "~/types/member"
 import { api } from "~/trpc/react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -20,33 +19,33 @@ interface MemberFormProps {
 
 export function MemberForm({ member, handleSuccess }: MemberFormProps) {
     const router = useRouter();
-    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isSubmitting] = useState(false)
 
     const utils = api.useUtils();
 
     // Initialize the mutation hook at the top of your component.
     const createMemberMutation = api.members.create.useMutation({
-        onSuccess: (data) => {
+        onSuccess: async () => {
             // Handle any post-success actions (e.g., notifications, redirection)
             toast.success("Membro criado com sucesso!")
 
             // Invalidate the query
-            utils.members.getAll.invalidate();
+            await utils.members.getAll.invalidate();
 
             router.push("/socios")
         },
-        onError: (error) => {
+        onError: () => {
             toast.error("Erro ao criar membro")
         },
     })
 
     const editMemberMutation = api.members.edit.useMutation({
-        onSuccess: (data) => {
+        onSuccess: async () => {
             if (handleSuccess) {
                 handleSuccess();
             }
 
-            utils.members.getAll.invalidate();
+            await utils.members.getAll.invalidate();
             toast.success("Membro editado com sucesso!")
             router.push("/socios")
         },

@@ -1,8 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { PartnerForm } from "~/components/partners-form";
-import { Button } from "~/components/ui/button";
-import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
+import { SidebarInset } from "~/components/ui/sidebar";
 
 export default function CriarParceiroPage() {
     return (

@@ -9,9 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog"
 import { Pencil, Trash2 } from "lucide-react"
 import { useState } from "react"
-import { Parceiro } from "~/types/parceiro"
+import { type Parceiro } from "~/types/parceiro"
 import { Badge } from "~/components/ui/badge"
 import { toast } from "sonner"
+import Image from "next/image"
 
 export default function ParceirosPage() {
   const [editingPartner, setEditingPartner] = useState<Parceiro | null>(null)
@@ -20,8 +21,8 @@ export default function ParceirosPage() {
 
   const utils = api.useUtils()
   const { mutate: deleteMutation } = api.partners.delete.useMutation({
-    onSuccess: () => {
-      utils.partners.getAll.invalidate()
+    onSuccess: async () => {
+      await utils.partners.getAll.invalidate()
       toast.success("Partner deleted successfully")
     },
     onError: (error) => {
@@ -64,7 +65,7 @@ export default function ParceirosPage() {
                 return (
                   <TableRow key={partner.id}>
                     <TableCell>
-                      <img src={partner.nameUrl} className="h-auto w-12" />
+                      <Image alt="parner image" src={partner.nameUrl} className="h-auto w-12" />
                     </TableCell>
                     <TableCell>{partner.name}</TableCell>
                     <TableCell>{partner.description}</TableCell>

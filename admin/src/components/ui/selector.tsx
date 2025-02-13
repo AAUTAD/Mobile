@@ -18,9 +18,7 @@ export interface Option {
   /** Group the options by providing key. */
   [key: string]: string | boolean | undefined;
 }
-interface GroupOption {
-  [key: string]: Option[];
-}
+type GroupOption = Record<string, Option[]>;
 
 interface MultipleSelectorProps {
   value?: Option[];
@@ -212,7 +210,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
       ref,
       () => ({
         selectedValue: [...selected],
-        input: inputRef.current as HTMLInputElement,
+        input: inputRef.current!,
         focus: () => inputRef?.current?.focus(),
         reset: () => setSelected([]),
       }),
@@ -248,8 +246,8 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
             if (input.value === '' && selected.length > 0) {
               const lastSelectOption = selected[selected.length - 1];
               // If last item is fixed, we should not remove it.
-              if (!lastSelectOption.fixed) {
-                handleUnselect(selected[selected.length - 1]);
+              if (lastSelectOption && !lastSelectOption.fixed) {
+                handleUnselect(lastSelectOption);
               }
             }
           }

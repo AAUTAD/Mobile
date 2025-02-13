@@ -12,7 +12,7 @@ export const membersRouter = createTRPCRouter({
             return ctx.db.member.create({
                 data: {
                     ...parsedData,
-                    registrationDate: parsedData.registrationDate || new Date().toISOString(),
+                    registrationDate: parsedData.registrationDate ?? new Date().toISOString(),
                 },
             });
         }),
@@ -73,7 +73,7 @@ export const membersRouter = createTRPCRouter({
                 throw new Error("Next payment date has already passed.");
             }
 
-            if(member && member.nextPayment) {
+            if(member?.nextPayment) {
                 const data = {
                         email: member.email,
                         verificationToken: verification_token,

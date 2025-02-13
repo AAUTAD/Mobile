@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Tag } from "@prisma/client"
+import { type Tag } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { tagSchema } from "~/schemas/tag-schema";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
@@ -26,8 +26,8 @@ export function TagForm({ tag }: TagFormProps) {
     const utils = api.useUtils();
 
     const editTagMutation = api.tags.edit.useMutation({
-        onSuccess: (data) => {
-          utils.tags.getAll.invalidate();
+        onSuccess: async () => {
+          await utils.tags.getAll.invalidate();
           toast.success("Tag editada com sucesso!")
           router.push("/tags")
         },
@@ -38,8 +38,8 @@ export function TagForm({ tag }: TagFormProps) {
       })
 
     const createTagMutation = api.tags.create.useMutation({
-        onSuccess: (data) => {
-          utils.tags.getAll.invalidate();
+        onSuccess: async () => {
+          await utils.tags.getAll.invalidate();
           toast.success("Tag criada com sucesso!")
           router.push("/tags")
         },
@@ -62,7 +62,7 @@ export function TagForm({ tag }: TagFormProps) {
         const validatedData = tagSchema.parse(data);
 
         if(tag?.id) {
-            await editTagMutation.mutate({
+            editTagMutation.mutate({
                 id: tag.id,
                 tagSchema: {
                     ...validatedData,
@@ -71,7 +71,7 @@ export function TagForm({ tag }: TagFormProps) {
                 }
             })
         } else {
-            await createTagMutation.mutate({
+            createTagMutation.mutate({
                 ...validatedData,
                 name: data.name,
                 value: getValue(data.name)

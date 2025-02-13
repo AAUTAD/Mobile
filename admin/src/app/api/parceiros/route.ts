@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import { NextResponse } from 'next/server'
 import { api } from '~/trpc/server'
 

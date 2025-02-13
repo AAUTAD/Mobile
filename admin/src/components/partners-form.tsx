@@ -8,11 +8,12 @@ import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form"
 import { parceiroSchema } from "~/schemas/parceiros-schema"
-import { Parceiro } from "~/types/parceiro"
+import { type Parceiro } from "~/types/parceiro"
 import { api } from "~/trpc/react"
-import MultipleSelector, { Option } from "./ui/selector"
+import MultipleSelector, { type Option } from "./ui/selector"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 // Photo
 import { computeSHA256 } from "~/lib/utils"
@@ -33,6 +34,7 @@ interface PartnerFormProps {
 
 export function PartnerForm({ parceiro, handleSuccess }: PartnerFormProps) {
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [tags, setTags] = useState<Option[]>([])
 
@@ -46,31 +48,31 @@ export function PartnerForm({ parceiro, handleSuccess }: PartnerFormProps) {
     if (parceiro) {
       setTags(OPTIONS.filter((option) => parceiro.tags.includes(option.label)))
     }
-  }, [])
+  }, [parceiro])
 
   // Initialize the mutation hook at the top of your component.
   const createPartnerMutation = api.partners.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess:async () => {
       // Handle any post-success actions (e.g., notifications, redirection)
       toast.success("Parceiro criado com sucesso!")
 
       // Invalidate the query
-      utils.partners.getAll.invalidate();
+      await utils.partners.getAll.invalidate();
 
       router.push("/parceiros")
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Erro ao criar parceiro")
     },
   })
 
   const editPartnerMutation = api.partners.edit.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async () => {
       if (handleSuccess) {
         handleSuccess();
       }
 
-      utils.partners.getAll.invalidate();
+      await utils.partners.getAll.invalidate();
       toast.success("Parceiro editado com sucesso!")
       router.push("/parceiros")
     },
@@ -212,7 +214,7 @@ export function PartnerForm({ parceiro, handleSuccess }: PartnerFormProps) {
           />
           {file && (
             <div className="mt-2">
-              <img src={URL.createObjectURL(file)} alt="Preview" className="h-20 w-auto" />
+              <Image src={URL.createObjectURL(file)} alt="Preview" className="h-20 w-auto" width={80} height={80} />
             </div>
           )}
         </div>
@@ -312,7 +314,7 @@ export function PartnerForm({ parceiro, handleSuccess }: PartnerFormProps) {
         <FormField
           control={form.control}
           name="tags"
-          render={({ field }) => (
+          render={() => (
             <FormItem>
               <FormLabel>Tags</FormLabel>
               <FormControl>
