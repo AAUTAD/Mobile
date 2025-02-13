@@ -65,7 +65,7 @@ export default function ParceirosPage() {
                 return (
                   <TableRow key={partner.id}>
                     <TableCell>
-                      <Image alt="parner image" src={partner.nameUrl} className="h-auto w-12" />
+                      <img alt="parner image" src={partner.nameUrl} className="h-auto w-12" />
                     </TableCell>
                     <TableCell>{partner.name}</TableCell>
                     <TableCell>{partner.description}</TableCell>

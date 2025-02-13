@@ -214,7 +214,7 @@ export function PartnerForm({ parceiro, handleSuccess }: PartnerFormProps) {
           />
           {file && (
             <div className="mt-2">
-              <Image src={URL.createObjectURL(file)} alt="Preview" className="h-20 w-auto" width={80} height={80} />
+              <img src={URL.createObjectURL(file)} alt="Preview" className="h-20 w-auto" width={80} height={80} />
             </div>
           )}
         </div>

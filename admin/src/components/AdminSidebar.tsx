@@ -30,7 +30,7 @@ export function AdminSidebar() {
     <Sidebar className="bg-gray-200">
       <SidebarHeader>
         <Link href={"/"}>
-          <Image src="/aautad-header.png" alt="Logo" className="w-fit h-auto" />
+          <img src="/aautad-header.png" alt="Logo" className="w-fit h-auto" />
         </Link>
       </SidebarHeader>
       <SidebarContent>
