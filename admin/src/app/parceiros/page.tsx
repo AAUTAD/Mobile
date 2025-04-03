@@ -50,7 +50,7 @@ export default function ParceirosPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Image</TableHead>
+                <TableHead>Imagem</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Discount</TableHead>

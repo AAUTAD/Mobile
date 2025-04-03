@@ -13,7 +13,6 @@ import { api } from "~/trpc/react"
 import MultipleSelector, { type Option } from "./ui/selector"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
-import Image from "next/image"
 
 // Photo
 import { computeSHA256 } from "~/lib/utils"

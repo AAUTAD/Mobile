@@ -7,6 +7,9 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
     output: "standalone",
+    images: {
+        domains: ['mobile-backoffice-local-paris.s3.eu-west-3.amazonaws.com']
+    }
 };
 
 export default config;

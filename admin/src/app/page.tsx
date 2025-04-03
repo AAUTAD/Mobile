@@ -21,7 +21,7 @@ export default async function Home() {
                 {session ? "Sign out" : "Sign in"}
               </Link>
               <a href="aautad://">Abrir app</a>
-              <a href="aautad://member?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXR1cm5PYmplY3QiOnsiZW1haWwiOiJqb3RhZmUzMkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJKb2FvIiwibGFzdE5hbWUiOiJBemV2ZWRvIiwibWVtYmVySWQiOiIxIiwidmVyaWZpY2F0aW9uX3Rva2VuIjoiNjA0MmI0MTgtNzA1OC00YzE4LWI4N2YtZGZjYjI3OTlkOTIwIiwibmV4dFBheW1lbnQiOiIyMDI2LTAyLTEwVDAwOjAwOjAwLjAwMFoifSwiaWF0IjoxNzM5Mjk2MTYxLCJleHAiOjMzMTI0NzM0MjEzfQ.r3tR1zrEmoAbvr1f5uKB5qHGo1SGy9PYPkocq6EV6oU">Token</a>
+              <a href="aautad://member?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXR1cm5PYmplY3QiOnsiZW1haWwiOiJqb3RhZmUzMkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJKb2FvIiwibGFzdE5hbWUiOiJBemV2ZWRvIiwibWVtYmVySWQiOiIxIiwidmVyaWZpY2F0aW9uX3Rva2VuIjoiNjA0MmI0MTgtNzA1OC00YzE4LWI4N2YtZGZjYjI3OTlkOTIwIiwibmV4dFBheW1lbnQiOiIyMDI2LTAyLTEwVDAwOjAwOjAwLjAwMFoifSwiaWF0IjoxNzM5Mjk2MTYxLCJleHAiOjMzMTI0NzM0MjEzfQ.r3tR1zrEmoAbvr1f5uKB5qHGo1SGy9PYPkocq6EV6oU">Token teste</a>
             </div>
           </div>
 

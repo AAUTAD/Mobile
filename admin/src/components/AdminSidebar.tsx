@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Users, LogOut, Tags } from "lucide-react"
+import { Home, Users, LogOut, Tags, Calendar, Newspaper } from "lucide-react"
 import Link from "next/link"
 import {
   Sidebar,
@@ -14,7 +14,6 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from "~/components/ui/sidebar"
-import Image from "next/image"
 
 //import { signOut } from "~/server/auth"
 
@@ -22,6 +21,8 @@ const navItems = [
   { icon: Home, label: "Dashboard", href: "/" },
   { icon: Users, label: "Parceiros", href: "/parceiros" },
   { icon: Tags, label: "Categorias", href: "/tags" },
+  { icon: Calendar, label: "Eventos", href: "/eventos" },
+  { icon: Newspaper, label: "Notícias", href: "/noticias"}
 ]
 
 
