@@ -48,4 +48,28 @@ export const eventsRouter = createTRPCRouter({
                 },
             });
         }),
+    getUpcoming: publicProcedure
+        .query(async ({ ctx }) => {
+            const now = new Date();
+
+            return ctx.db.event.findMany({
+                where: {
+                    OR: [
+                        {
+                            startDate: {
+                                gte: now, // Fetch events with a start date in the future
+                            },
+                        },
+                        {
+                            endDate: {
+                                gte: now, // Fetch events with an end date in the future
+                            },
+                        },
+                    ],
+                },
+                orderBy: {
+                    startDate: "asc", // Order by the nearest start date
+                },
+            });
+        }),
 });
