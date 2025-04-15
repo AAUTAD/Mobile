@@ -8,11 +8,10 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    // Use pooled connection for the app
     url      = env("DATABASE_URL")
+    // Use direct connection for migrations
+    directUrl = env("DIRECT_URL")
 }
 
 // Necessary for Next auth
