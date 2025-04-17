@@ -17,13 +17,13 @@ jobs:
             --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
             --build-arg NEXT_PUBLIC_CLIENTVAR=${{ secrets.NEXT_PUBLIC_CLIENTVAR }} \
             --build-arg AUTH_SECRET=${{ secrets.AUTH_SECRET }} \
-            -t nextjs-app:latest ./mobile
+            -t nextjs-app:latest ./admin
       
       - name: Deploy with Docker Compose
         run: |
           # Copy the docker-compose file to a location on the server
           mkdir -p ~/mobile-deployment
-          cp ./docker-compose.mobile.yml ~/mobile-deployment/
+          cp ~/admin/docker-compose.mobile.yml ~/mobile-deployment/
           cd ~/mobile-deployment
           
           # Stop and remove any existing container
