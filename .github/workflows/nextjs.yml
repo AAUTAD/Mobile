@@ -1,0 +1,31 @@
+name: Deploy Next.js
+
+on:
+  push:
+    branches: [ main ]  # Adjust this to your main branch name if different
+
+jobs:
+  deploy:
+    runs-on: self-hosted  # This is the key change - using your self-hosted runner
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Build Docker image
+        run: |
+          docker build -t nextjs-app:latest .
+      
+      - name: Deploy container
+        run: |
+          # Stop and remove the old container if it exists
+          docker stop nextjs-container || true
+          docker rm nextjs-container || true
+          
+          # Run the new container, adjust network/port settings as needed
+          docker run -d --name nextjs-container --restart unless-stopped \
+            --network nginx-network \
+            -e NODE_ENV=production \
+            nextjs-app:latest
+          
+          # Optional: Clean up old images to save disk space
+          docker image prune -f
