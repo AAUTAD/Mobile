@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  mobile.aautad.pt:
+    container_name: mobile
+    image: nextjs-app:latest
+    environment:
+      VIRTUAL_HOST: mobile.aautad.pt
+      LETSENCRYPT_HOST: mobile.aautad.pt
+    restart: always
+    networks:
+      - nginx_proxy_network
+
+networks:
+  nginx_proxy_network:
+    external: true
+    name: website_default # This might need to be adjusted

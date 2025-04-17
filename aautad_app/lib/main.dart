@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'routes/app_routes.dart';
 import 'themes/app_theme.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:app_links/app_links.dart';
 
 final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
@@ -23,6 +23,9 @@ class _MyAppState extends State<MyApp> {
   // Variable to store the deep link token
   String? _deepLinkToken;
 
+  // Instance of AppLinks for handling deep links
+  late AppLinks _appLinks;
+
   @override
   void initState() {
     super.initState();
@@ -31,26 +34,31 @@ class _MyAppState extends State<MyApp> {
 
   // Initialize deep linking to capture the initial link
   Future<void> initDeepLink() async {
+    _appLinks = AppLinks();
+
     // Handle the initial deep link (when the app is launched from a deep link)
     try {
-      final initialLink = await getInitialLink();
-      _handleDeepLink(initialLink);
-      setState(() {
-        _initialLink = initialLink;
-      });
-      // Perform navigation based on the deep link
-      // _navigateToDeepLink(_initialLink);
-      _handleDeepLink(initialLink);
+      final initialLink = await _appLinks.getInitialAppLink();
+      if (initialLink != null) {
+        final initialLinkString = initialLink.toString();
+        _handleDeepLink(initialLinkString);
+        setState(() {
+          _initialLink = initialLinkString;
+        });
+      }
     } catch (e) {
       print('Error retrieving deep link: $e');
     }
 
     // Listen for deep links while the app is in the foreground
-    linkStream.listen((String? link) {
-      setState(() {
-        _initialLink = link;
-      });
-      _handleDeepLink(link);
+    _appLinks.uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        final link = uri.toString();
+        setState(() {
+          _initialLink = link;
+        });
+        _handleDeepLink(link);
+      }
     });
   }
 
@@ -74,17 +82,6 @@ class _MyAppState extends State<MyApp> {
       }
     }
   }
-
-  // // Navigate to the specific screen based on the deep link
-  // void _navigateToDeepLink(String? link) {
-  //   if (link != null && link.contains('member-card')) {
-  //     // Navigate to the member card screen
-  //     // Replace with your actual navigation logic
-  //     router.goNamed(Routes.homePage);
-  //   } else {
-  //     router.goNamed(Routes.homePage);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
