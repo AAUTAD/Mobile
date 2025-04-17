@@ -15,7 +15,7 @@ async function main() {
     where: { email: adminEmail },
   });
 
-  if (!existingAdmin) 
+  if (!existingAdmin) {
     await prisma.user.create({
       data: {
         email: adminEmail,
