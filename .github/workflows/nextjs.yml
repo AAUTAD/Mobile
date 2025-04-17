@@ -13,7 +13,7 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build \
+          sudo docker build \
             --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
             --build-arg NEXT_PUBLIC_CLIENTVAR=${{ secrets.NEXT_PUBLIC_CLIENTVAR }} \
             --build-arg AUTH_SECRET=${{ secrets.AUTH_SECRET }} \
