@@ -27,7 +27,7 @@ jobs:
           cd ~/mobile-deployment
           
           # Stop and remove any existing container
-          docker-compose -f docker-compose.mobile.yml down || true
+          sudo docker-compose -f docker-compose.mobile.yml down || true
           
           # Start the new container
-          docker-compose -f docker-compose.mobile.yml up -d
+          sudo docker-compose -f docker-compose.mobile.yml up -d
