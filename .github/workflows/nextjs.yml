@@ -23,7 +23,7 @@ jobs:
         run: |
           # Copy the docker-compose file to a location on the server
           mkdir -p ~/mobile-deployment
-          cp ~/admin/docker-compose.mobile.yml ~/mobile-deployment/
+          cp docker-compose.mobile.yml ~/mobile-deployment/
           cd ~/mobile-deployment
           
           # Stop and remove any existing container
