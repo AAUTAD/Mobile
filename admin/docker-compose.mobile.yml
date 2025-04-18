@@ -7,6 +7,9 @@ services:
     environment:
       VIRTUAL_HOST: docs.aautad.pt
       LETSENCRYPT_HOST: docs.aautad.pt
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+      NEXT_PUBLIC_CLIENTVAR: ${NEXT_PUBLIC_CLIENTVAR}
     restart: always
     networks:
       - nginx_proxy_network
@@ -14,4 +17,4 @@ services:
 networks:
   nginx_proxy_network:
     external: true
-    name: website_default # This might need to be adjusted
+    name: aautad_default # This might need to be adjusted

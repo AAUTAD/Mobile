@@ -21,6 +21,11 @@ jobs:
       
       - name: Deploy with Docker Compose
         run: |
+
+          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          export AUTH_SECRET="${{ secrets.AUTH_SECRET }}"
+          export NEXT_PUBLIC_CLIENTVAR="${{ secrets.NEXT_PUBLIC_CLIENTVAR }}"
+
           # Copy the docker-compose file to a location on the server
           mkdir -p ~/mobile-deployment
           cp ./admin/docker-compose.mobile.yml ~/mobile-deployment/
