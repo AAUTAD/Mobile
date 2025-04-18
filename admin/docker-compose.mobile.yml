@@ -5,8 +5,8 @@ services:
     container_name: mobile
     image: nextjs-app:latest
     environment:
-      VIRTUAL_HOST: mobile.aautad.pt
-      LETSENCRYPT_HOST: mobile.aautad.pt
+      VIRTUAL_HOST: docs.aautad.pt
+      LETSENCRYPT_HOST: docs.aautad.pt
     restart: always
     networks:
       - nginx_proxy_network
