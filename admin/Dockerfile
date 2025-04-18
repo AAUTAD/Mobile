@@ -20,6 +20,11 @@ FROM --platform=linux/amd64 node:20-alpine AS builder
 ARG DATABASE_URL
 ARG NEXT_PUBLIC_CLIENTVAR
 ARG AUTH_SECRET
+
+# Promote them to ENV so Next.js sees them
+ENV DATABASE_URL=$DATABASE_URL
+ENV AUTH_SECRET=$AUTH_SECRET
+
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
