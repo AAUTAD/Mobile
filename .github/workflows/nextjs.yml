@@ -1,0 +1,38 @@
+name: Deploy Next.js to University Server
+
+on:
+  push:
+    branches: [ main ]  # Adjust this to your main branch name if different
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Build Docker image
+        run: |
+          sudo docker build \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg NEXT_PUBLIC_CLIENTVAR=${{ secrets.NEXT_PUBLIC_CLIENTVAR }} \
+            --build-arg AUTH_SECRET=${{ secrets.AUTH_SECRET }} \
+            -t nextjs-app:latest ./admin
+      
+      - name: Deploy with Docker Compose
+        run: |
+
+          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          export AUTH_SECRET="${{ secrets.AUTH_SECRET }}"
+          export NEXT_PUBLIC_CLIENTVAR="${{ secrets.NEXT_PUBLIC_CLIENTVAR }}"
+
+          # Copy the docker-compose file to a location on the server
+          mkdir -p ~/mobile-deployment
+          cp ./admin/docker-compose.mobile.yml ~/mobile-deployment/
+          cd ~/mobile-deployment
+          
+          # Stop and remove any existing container
+          sudo docker-compose -f docker-compose.mobile.yml down || true
+          
+          # Start the new container
+          sudo docker-compose -f docker-compose.mobile.yml up -d

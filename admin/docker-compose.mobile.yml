@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  mobile.aautad.pt:
+    container_name: mobile
+    image: nextjs-app:latest
+    environment:
+      VIRTUAL_HOST: docs.aautad.pt
+      LETSENCRYPT_HOST: docs.aautad.pt
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+      NEXT_PUBLIC_CLIENTVAR: ${NEXT_PUBLIC_CLIENTVAR}
+    restart: always
+    networks:
+      - nginx_proxy_network
+
+networks:
+  nginx_proxy_network:
+    external: true
+    name: aautad_default # This might need to be adjusted
