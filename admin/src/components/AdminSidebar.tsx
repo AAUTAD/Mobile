@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Users, LogOut, Tags, Calendar, Newspaper } from "lucide-react"
+import { Home, Users, LogOut, Tags, Calendar, Newspaper, Volleyball } from "lucide-react"
 import Link from "next/link"
 import {
   Sidebar,
@@ -22,7 +22,8 @@ const navItems = [
   { icon: Users, label: "Parceiros", href: "/parceiros" },
   { icon: Tags, label: "Categorias", href: "/tags" },
   { icon: Calendar, label: "Eventos", href: "/eventos" },
-  { icon: Newspaper, label: "Notícias", href: "/noticias"}
+  { icon: Newspaper, label: "Notícias", href: "/noticias"},
+  {icon: Volleyball, label: "Desporto", href: "/desporto"},
 ]
 
 
