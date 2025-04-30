@@ -15,6 +15,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    INSTAGRAM_ACCESS_TOKEN: z.string().optional(),
+    INSTAGRAM_USER_ID: z.string().optional(),
   },
 
   /**
@@ -34,6 +36,8 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    INSTAGRAM_ACCESS_TOKEN: process.env.INSTAGRAM_ACCESS_TOKEN,
+    INSTAGRAM_USER_ID: process.env.INSTAGRAM_USER_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
