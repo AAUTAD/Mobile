@@ -16,6 +16,7 @@ import { getSignedURL } from "~/lib/aws";
 import { Textarea } from "~/components/ui/textarea";
 import { Switch } from "~/components/ui/switch";
 import { InstagramIcon, Loader2 } from "lucide-react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "~/components/ui/select";
 
 interface NewsFormProps {
     news?: News;
@@ -133,6 +134,7 @@ export function NewsForm({ news, handleSuccess }: NewsFormProps) {
         defaultValues: news || {
             title: "",
             content: "",
+            type: "main", // Default to main news type
             imageUrl: undefined,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -248,6 +250,30 @@ export function NewsForm({ news, handleSuccess }: NewsFormProps) {
                                     {...field}
                                 />
                             </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>News Type</FormLabel>
+                            <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select news type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="main">Main News</SelectItem>
+                                    <SelectItem value="sports">Sports News</SelectItem>
+                                </SelectContent>
+                            </Select>
                             <FormMessage />
                         </FormItem>
                     )}

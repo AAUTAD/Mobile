@@ -5,6 +5,7 @@ import { instagramAPI } from "../../services/instagram-api";
 export const newsSchema = z.object({
     title: z.string().min(1, "Title is required"),
     content: z.string().min(1, "Content is required"),
+    type: z.enum(["main", "sports"]),
     imageUrl: z.string().url().optional(),
     createdAt: z.date().default(() => new Date()),
     updatedAt: z.date().optional(),

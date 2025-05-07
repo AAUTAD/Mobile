@@ -26,6 +26,7 @@ export default function NoticiasPage() {
     const [viewContentOpen, setViewContentOpen] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
+    const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
     const { data: news, isLoading } = api.news.getAll.useQuery();
 
     const utils = api.useUtils();
@@ -43,7 +44,7 @@ export default function NoticiasPage() {
         deleteMutation({ id });
     };
 
-    // Filter news based on search query and date
+    // Filter news based on search query, date, and type
     const filteredNews = news?.filter(item => {
         const matchesSearch = searchQuery === '' || 
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -51,8 +52,10 @@ export default function NoticiasPage() {
         
         const matchesDate = !dateFilter || 
             new Date(item.createdAt).toDateString() === dateFilter.toDateString();
+        
+        const matchesType = !typeFilter || item.type === typeFilter;
             
-        return matchesSearch && matchesDate;
+        return matchesSearch && matchesDate && matchesType;
     });
 
     // Function to truncate text to 2 lines
@@ -64,6 +67,7 @@ export default function NoticiasPage() {
     const resetFilters = () => {
         setSearchQuery('');
         setDateFilter(undefined);
+        setTypeFilter(undefined);
     };
 
     return (
@@ -108,7 +112,16 @@ export default function NoticiasPage() {
                         />
                     </PopoverContent>
                 </Popover>
-                {(searchQuery || dateFilter) && (
+                <select
+                    className="h-9 w-[200px] rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+                    value={typeFilter || ""}
+                    onChange={(e) => setTypeFilter(e.target.value || undefined)}
+                >
+                    <option value="">All News Types</option>
+                    <option value="main">Main News</option>
+                    <option value="sports">Sports News</option>
+                </select>
+                {(searchQuery || dateFilter || typeFilter) && (
                     <Button variant="ghost" onClick={resetFilters}>
                         Clear filters
                     </Button>
@@ -127,6 +140,7 @@ export default function NoticiasPage() {
                                 <TableRow>
                                     <TableHead>Title</TableHead>
                                     <TableHead>Image</TableHead>
+                                    <TableHead>Type</TableHead>
                                     <TableHead>Created At</TableHead>
                                     <TableHead>Content</TableHead>
                                     <TableHead>Actions</TableHead>
@@ -142,6 +156,11 @@ export default function NoticiasPage() {
                                             ) : (
                                                 "No Image"
                                             )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.type === 'sports' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                                                {item.type === 'sports' ? 'Sports' : 'Main'}
+                                            </span>
                                         </TableCell>
                                         <TableCell className="whitespace-nowrap">{format(new Date(item.createdAt), "PPP")}</TableCell>
                                         <TableCell className="max-w-[200px]">
@@ -225,8 +244,13 @@ export default function NoticiasPage() {
                                 />
                             </div>
                         )}
-                        <div className="text-sm text-muted-foreground">
-                            Created: {viewContent && format(new Date(viewContent.createdAt), "PPP p")}
+                        <div className="text-sm text-muted-foreground flex items-center gap-3">
+                            <div>Created: {viewContent && format(new Date(viewContent.createdAt), "PPP p")}</div>
+                            {viewContent?.type && (
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${viewContent.type === 'sports' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
+                                    {viewContent.type === 'sports' ? 'Sports' : 'Main'}
+                                </span>
+                            )}
                         </div>
                         <div className="whitespace-pre-wrap">{viewContent?.content || ''}</div>
                     </div>
