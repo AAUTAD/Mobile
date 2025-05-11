@@ -5,6 +5,7 @@ export const newsSchema = z.object({
     title: z.string().min(1, "Title is required"),
     content: z.string().min(1, "Content is required"),
     imageUrl: z.string().url().optional(),
+    type: z.string().min(1, "Type is required"),
     createdAt: z.date().default(() => new Date()),
     updatedAt: z.date().optional(),
 });

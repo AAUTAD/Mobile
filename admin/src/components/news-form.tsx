@@ -15,7 +15,6 @@ import Image from "next/image";
 import { computeSHA256 } from "~/lib/utils";
 import { getSignedURL } from "~/lib/aws";
 
-
 interface NewsFormProps {
     news?: News;
     handleSuccess?: () => void;
@@ -66,6 +65,7 @@ export function NewsForm({ news, handleSuccess }: NewsFormProps) {
         defaultValues: news || {
             title: "",
             content: "",
+            type: "",
             imageUrl: undefined,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -155,6 +155,19 @@ export function NewsForm({ news, handleSuccess }: NewsFormProps) {
                             <FormLabel>Content</FormLabel>
                             <FormControl>
                                 <Textarea placeholder="News content" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Type</FormLabel>
+                            <FormControl>
+                                <Input placeholder="News type" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

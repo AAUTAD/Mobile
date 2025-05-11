@@ -23,7 +23,8 @@ const navItems = [
   { icon: Tags, label: "Categorias", href: "/tags" },
   { icon: Calendar, label: "Eventos", href: "/eventos" },
   { icon: Newspaper, label: "Notícias", href: "/noticias"},
-  {icon: Volleyball, label: "Desporto", href: "/desporto"},
+  { icon: Volleyball, label: "Desporto", href: "/desporto"},
+  { icon: Users, label: "Pessoas", href: "/pessoas" }, //
 ]
 
 

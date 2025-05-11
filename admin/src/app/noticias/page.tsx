@@ -56,52 +56,58 @@ export default function NoticiasPage() {
                                 <TableHead>Created At</TableHead>
                                 <TableHead>Updated At</TableHead>
                                 <TableHead>Content</TableHead>
+                                <TableHead>Type</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {news?.map((item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>{item.title}</TableCell>
-                                    <TableCell>
-                                        {item.imageUrl ? (
-                                            <img src={item.imageUrl} alt={item.title} className="h-12 w-12 object-cover" />
-                                        ) : (
-                                            "No Image"
-                                        )}
-                                    </TableCell>
-                                    <TableCell>{new Date(item.createdAt).toLocaleString()}</TableCell>
-                                    <TableCell>{new Date(item.updatedAt).toLocaleString()}</TableCell>
-                                    <TableCell>{item.content}</TableCell>
-                                    <TableCell>
-                                        <div className="flex space-x-2">
-                                            <Dialog open={editingNews == item && editOpen} onOpenChange={setEditOpen}>
-                                                <DialogTrigger asChild>
-                                                    <Button variant="outline" size="icon" onClick={() => setEditingNews(item)}>
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
-                                                </DialogTrigger>
-                                                <DialogContent className="max-h-[85vh] scroll-smooth overflow-scroll">
-                                                    <DialogHeader>
-                                                        <DialogTitle>Edit News</DialogTitle>
-                                                    </DialogHeader>
-                                                    <NewsForm
-                                                        news={editingNews ?? undefined}
-                                                        handleSuccess={() => setEditingNews(null)}
-                                                    />
-                                                </DialogContent>
-                                            </Dialog>
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                onClick={() => handleDelete(item.id)}
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {news?.map((item) => {
+                                // Ensure 'type' is present for each item (fallback to empty string if missing)
+                                const itemWithType = { ...item, type: (item as any).type ?? "" };
+                                return (
+                                    <TableRow key={itemWithType.id}>
+                                        <TableCell>{itemWithType.title}</TableCell>
+                                        <TableCell>
+                                            {itemWithType.imageUrl ? (
+                                                <img src={itemWithType.imageUrl} alt={itemWithType.title} className="h-12 w-12 object-cover" />
+                                            ) : (
+                                                "No Image"
+                                            )}
+                                        </TableCell>
+                                        <TableCell>{new Date(itemWithType.createdAt).toLocaleString()}</TableCell>
+                                        <TableCell>{new Date(itemWithType.updatedAt).toLocaleString()}</TableCell>
+                                        <TableCell>{itemWithType.content}</TableCell>
+                                        <TableCell>{itemWithType.type}</TableCell>
+                                        <TableCell>
+                                            <div className="flex space-x-2">
+                                                <Dialog open={editingNews == itemWithType && editOpen} onOpenChange={setEditOpen}>
+                                                    <DialogTrigger asChild>
+                                                        <Button variant="outline" size="icon" onClick={() => setEditingNews(itemWithType)}>
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent className="max-h-[85vh] scroll-smooth overflow-scroll">
+                                                        <DialogHeader>
+                                                            <DialogTitle>Edit News</DialogTitle>
+                                                        </DialogHeader>
+                                                        <NewsForm
+                                                            news={editingNews ?? undefined}
+                                                            handleSuccess={() => setEditingNews(null)}
+                                                        />
+                                                    </DialogContent>
+                                                </Dialog>
+                                                <Button
+                                                    variant="outline"
+                                                    size="icon"
+                                                    onClick={() => handleDelete(itemWithType.id)}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 )}

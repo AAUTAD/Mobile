@@ -5,7 +5,9 @@ import { tagsRouter } from "./routers/tags";
 import { membersRouter } from "./routers/members";
 import { eventsRouter } from "./routers/events";
 import { newsRouter } from "./routers/news";
-import { desportoRouter } from "./routers/desporto";
+import { sportRouter } from "./routers/sport"; // Renamed import
+import { scheduleRouter } from "./routers/schedule"; // Added schedule router import
+import { personRouter } from "./routers/person"; 
 
 /**
  * This is the primary router for your server.
@@ -19,7 +21,9 @@ export const appRouter = createTRPCRouter({
   members: membersRouter,
   events: eventsRouter,
   news: newsRouter,
-  desporto: desportoRouter, // New router added here
+  sport: sportRouter, // Renamed from desporto
+  schedule: scheduleRouter, // Added schedule router
+  person: personRouter, // Added personRouter to the appRouter
 });
 
 // export type definition of API

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:aautad_app/constants/spacings.dart';
 import 'package:aautad_app/models/news.dart';
 import 'package:aautad_app/screens/news_page.dart';
@@ -8,6 +7,8 @@ import 'package:aautad_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class NewsSection extends StatefulWidget {
+  final String? filterType; // null = all, 'sport' = only sport, 'not_sport' = all except sport
+  const NewsSection({Key? key, this.filterType}) : super(key: key);
   @override
   _NewsSectionState createState() => _NewsSectionState();
 }
@@ -23,7 +24,14 @@ class _NewsSectionState extends State<NewsSection> {
   }
 
   Future<List<News>> fetchNews() async {
-    return await apiService.fetchNews();
+    final allNews = await apiService.fetchNews();
+    if (widget.filterType == null) return allNews;
+    if (widget.filterType == 'sport') {
+      return allNews.where((n) => n.type == 'sport').toList();
+    } else if (widget.filterType == 'not_sport') {
+      return allNews.where((n) => n.type != 'sport').toList();
+    }
+    return allNews;
   }
 
   @override
@@ -47,12 +55,10 @@ class _NewsSectionState extends State<NewsSection> {
                 final item = news[index];
                 return GestureDetector(
                   onTap: () {
-                    // Handle tap event, e.g., navigate to a detailed news page
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            NewsDetailsPage(article: news[index]),
+                        builder: (context) => NewsDetailsPage(article: news[index]),
                       ),
                     );
                   },
@@ -76,8 +82,8 @@ class _NewsSectionState extends State<NewsSection> {
                                   Colors.black.withOpacity(0.6),
                                   Colors.transparent,
                                 ],
-                                begin: Alignment(0.0, 1.0), // Bottom
-                                end: Alignment(0.0, 0.3), // 30% from bottom
+                                begin: Alignment(0.0, 1.0),
+                                end: Alignment(0.0, 0.3),
                               ),
                             ),
                           ),
@@ -90,11 +96,7 @@ class _NewsSectionState extends State<NewsSection> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    (item.createdAt as DateTime?)
-                                            ?.toLocal()
-                                            .toString()
-                                            .split(' ')[0] ??
-                                        '',
+                                    (item.createdAt as DateTime?)?.toLocal().toString().split(' ')[0] ?? '',
                                     style: TextStyle(
                                         color: Colors.white70,
                                         fontSize: 14.0,
@@ -111,6 +113,7 @@ class _NewsSectionState extends State<NewsSection> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
+                                  // Removed type display
                                 ],
                               ),
                             ),

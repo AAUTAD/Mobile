@@ -1,27 +1,26 @@
 "use client";
 
 import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
-import { SportForm } from "~/components/sport-form";
+import { PersonForm } from "~/components/person-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-
-export default function CreateSportPage() {
+export default function CriarPessoaPage() {
     const router = useRouter();
 
     const handleSuccess = () => {
-        toast.success("Sport created successfully!");
-        router.push("/desporto");
+        toast.success("Person created successfully!");
+        router.push("/pessoas");
     };
 
     return (
         <SidebarInset>
             <header className="flex h-16 items-center gap-4 border-b px-6">
                 <SidebarTrigger />
-                <h1 className="text-lg font-semibold">Create Sport</h1>
+                <h1 className="text-lg font-semibold">Create Person</h1>
             </header>
             <main className="p-6">
-                <SportForm handleSuccess={handleSuccess} />
+                <PersonForm handleSuccess={handleSuccess} />
             </main>
         </SidebarInset>
     );
