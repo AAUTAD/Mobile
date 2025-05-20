@@ -1,11 +1,24 @@
-"use client"
+"use client";
 
 import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { api } from "~/trpc/react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow
+} from "~/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "~/components/ui/dialog";
 import { Pencil, Trash2, Search, CalendarIcon, Eye } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -16,20 +29,25 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { Calendar } from "~/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "~/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
-
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+} from "~/components/ui/tooltip";
 
 export default function NoticiasPage() {
     const [editingNews, setEditingNews] = useState<News | null>(null);
-    const [editOpen, setEditOpen] = useState<boolean>(false);
+    const [editOpen, setEditOpen] = useState(false);
     const [viewContent, setViewContent] = useState<News | null>(null);
-    const [viewContentOpen, setViewContentOpen] = useState<boolean>(false);
+    const [viewContentOpen, setViewContentOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
     const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
-    const { data: news, isLoading } = api.news.getAll.useQuery();
 
+    const { data: news, isLoading } = api.news.getAll.useQuery();
     const utils = api.useUtils();
+
     const { mutate: deleteMutation } = api.news.delete.useMutation({
         onSuccess: async () => {
             await utils.news.getAll.invalidate();
@@ -40,25 +58,25 @@ export default function NoticiasPage() {
         },
     });
 
-    const handleDelete = (id: string): void => {
+    const handleDelete = (id: string) => {
         deleteMutation({ id });
     };
 
-    // Filter news based on search query, date, and type
     const filteredNews = news?.filter(item => {
-        const matchesSearch = searchQuery === '' || 
-            item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+        const matchesSearch =
+            searchQuery === '' ||
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.content.toLowerCase().includes(searchQuery.toLowerCase());
-        
-        const matchesDate = !dateFilter || 
+
+        const matchesDate =
+            !dateFilter ||
             new Date(item.createdAt).toDateString() === dateFilter.toDateString();
-        
+
         const matchesType = !typeFilter || item.type === typeFilter;
-            
+
         return matchesSearch && matchesDate && matchesType;
     });
 
-    // Function to truncate text to 2 lines
     const truncateText = (text: string, maxLength = 100) => {
         if (text.length <= maxLength) return text;
         return text.substring(0, maxLength) + '...';
@@ -81,6 +99,7 @@ export default function NoticiasPage() {
                     </Link>
                 </div>
             </header>
+
             <div className="p-6 pb-2 flex flex-wrap gap-4 border-b">
                 <div className="relative flex-1 min-w-[250px]">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -91,6 +110,7 @@ export default function NoticiasPage() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
+
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
@@ -112,6 +132,7 @@ export default function NoticiasPage() {
                         />
                     </PopoverContent>
                 </Popover>
+
                 <select
                     className="h-9 w-[200px] rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
                     value={typeFilter || ""}
@@ -121,12 +142,14 @@ export default function NoticiasPage() {
                     <option value="main">Main News</option>
                     <option value="sports">Sports News</option>
                 </select>
+
                 {(searchQuery || dateFilter || typeFilter) && (
                     <Button variant="ghost" onClick={resetFilters}>
                         Clear filters
                     </Button>
                 )}
             </div>
+
             <main className="p-6">
                 {isLoading ? (
                     <div>Loading news...</div>
@@ -162,7 +185,9 @@ export default function NoticiasPage() {
                                                 {item.type === 'sports' ? 'Sports' : 'Main'}
                                             </span>
                                         </TableCell>
-                                        <TableCell className="whitespace-nowrap">{format(new Date(item.createdAt), "PPP")}</TableCell>
+                                        <TableCell className="whitespace-nowrap">
+                                            {format(new Date(item.createdAt), "PPP")}
+                                        </TableCell>
                                         <TableCell className="max-w-[200px]">
                                             <div className="line-clamp-2 text-sm">
                                                 {truncateText(item.content)}
@@ -173,10 +198,14 @@ export default function NoticiasPage() {
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
-                                                            <Button variant="outline" size="icon" onClick={() => {
-                                                                setViewContent(item);
-                                                                setViewContentOpen(true);
-                                                            }}>
+                                                            <Button
+                                                                variant="outline"
+                                                                size="icon"
+                                                                onClick={() => {
+                                                                    setViewContent(item);
+                                                                    setViewContentOpen(true);
+                                                                }}
+                                                            >
                                                                 <Eye className="h-4 w-4" />
                                                             </Button>
                                                         </TooltipTrigger>
@@ -185,7 +214,7 @@ export default function NoticiasPage() {
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>
-                                                
+
                                                 <Dialog open={editingNews == item && editOpen} onOpenChange={setEditOpen}>
                                                     <DialogTrigger asChild>
                                                         <Button variant="outline" size="icon" onClick={() => setEditingNews(item)}>
@@ -202,6 +231,7 @@ export default function NoticiasPage() {
                                                         />
                                                     </DialogContent>
                                                 </Dialog>
+
                                                 <TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
@@ -228,7 +258,6 @@ export default function NoticiasPage() {
                 )}
             </main>
 
-            {/* View full content dialog */}
             <Dialog open={viewContentOpen} onOpenChange={setViewContentOpen}>
                 <DialogContent className="max-h-[85vh] scroll-smooth overflow-auto">
                     <DialogHeader>
@@ -237,10 +266,10 @@ export default function NoticiasPage() {
                     <div className="space-y-4 mt-2">
                         {viewContent?.imageUrl && (
                             <div className="flex justify-center">
-                                <img 
-                                    src={viewContent.imageUrl} 
-                                    alt={viewContent.title} 
-                                    className="max-h-[300px] object-contain rounded-md" 
+                                <img
+                                    src={viewContent.imageUrl}
+                                    alt={viewContent.title}
+                                    className="max-h-[300px] object-contain rounded-md"
                                 />
                             </div>
                         )}

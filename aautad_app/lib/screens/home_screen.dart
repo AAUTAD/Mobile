@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     // Header Section
                     HeaderSection(),
-                    NewsSection(),
+                    NewsSection(filterType: 'not_sport'),
                     SizedBox(height: 20),
 
                     // Featured Offer Card

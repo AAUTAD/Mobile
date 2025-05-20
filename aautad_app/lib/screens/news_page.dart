@@ -45,6 +45,7 @@ class NewsDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Category & Date
+                  SizedBox(height: 4),
                   Text(
                     "${article.createdAt.day.toString().padLeft(2, '0')}-${article.createdAt.month.toString().padLeft(2, '0')}-${article.createdAt.year}",
                     style: TextStyle(color: Colors.grey, fontSize: 14),

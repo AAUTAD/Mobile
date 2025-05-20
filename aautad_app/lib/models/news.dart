@@ -5,6 +5,7 @@ class News {
   final String title;
   final String content;
   final String imageUrl;
+  final String type;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -13,6 +14,7 @@ class News {
     required this.title,
     required this.content,
     required this.imageUrl,
+    required this.type,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -23,6 +25,7 @@ class News {
       title: fixEncoding(json['title']), // Apply fixEncoding
       content: fixEncoding(json['content']), // Apply fixEncoding
       imageUrl: json['imageUrl'],
+      type: json['type'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
@@ -34,6 +37,7 @@ class News {
       'title': title,
       'content': content,
       'imageUrl': imageUrl,
+      'type': type,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };

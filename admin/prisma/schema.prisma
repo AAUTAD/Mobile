@@ -3,6 +3,7 @@
 
 generator client {
     provider = "prisma-client-js"
+    output   = "../node_modules/.prisma/client" // Added output path
     binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
@@ -120,6 +121,7 @@ model News {
     content     String
     type        String   @default("main")
     imageUrl    String?
+    type        String // Added type column
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
@@ -135,3 +137,30 @@ model Event {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
+
+model Person {
+  id          String    @id @default(cuid())
+  name        String
+  contact     String?
+  email       String?   @unique
+  role        String
+  sports      Sport[]   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}
+
+model Sport {
+  id          String     @id @default(cuid())
+  name        String
+  location    String
+  details     String?
+  link        String?
+  imageUrl    String?
+  persons     Person[]   
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+}
+
+

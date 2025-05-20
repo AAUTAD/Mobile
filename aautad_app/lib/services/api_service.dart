@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:aautad_app/models/news.dart';
 import 'package:http/http.dart' as http;
 import '../models/partner.dart';
+import '../models/sport_info.dart';
 
 String getBaseUrl() {
   if (Platform.isAndroid) {
@@ -49,6 +50,17 @@ class ApiService {
       return data.map((json) => News.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load news data');
+    }
+  }
+
+  Future<List<SportInfo>> fetchSports() async {
+    final response = await http.get(Uri.parse('$baseUrl/desporto/'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return data.map((json) => SportInfo.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load sports data');
     }
   }
 

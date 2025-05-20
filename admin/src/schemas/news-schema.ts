@@ -8,6 +8,7 @@ export const NewsSchema = z.object({
     required_error: "Please select a news type",
   }),
   imageUrl: z.string().url().optional().nullable(),
+  type: z.string().min(1, "Type is required"),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
-import { parceiroSchema } from "~/schemas/parceiros-schema";
+import { parceiroSchema } from "~/schemas/partners-schema";
 import { Decimal } from "@prisma/client/runtime/library";
 import { string, z } from "zod";
 

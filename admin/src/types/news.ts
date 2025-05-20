@@ -4,6 +4,7 @@ export type News = {
     content: string;
     type: "main" | "sports";
     imageUrl?: string | null;
+    type: string;
     createdAt: Date;
     updatedAt: Date;
-  };
+};
