@@ -18,9 +18,11 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
   }
 
   Future<void> _refreshSports() async {
+    final newFuture = _apiService.fetchSports();
     setState(() {
-      _sportsFuture = _apiService.fetchSports();
+      _sportsFuture = newFuture;
     });
+    await newFuture;
   }
 
   @override
