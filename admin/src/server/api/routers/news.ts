@@ -7,7 +7,6 @@ export const newsSchema = z.object({
     content: z.string().min(1, "Content is required"),
     type: z.enum(["main", "sports"]),
     imageUrl: z.string().url().optional(),
-    type: z.string().min(1, "Type is required"),
     createdAt: z.date().default(() => new Date()),
     updatedAt: z.date().optional(),
 });

@@ -6,7 +6,6 @@ import { membersRouter } from "./routers/members";
 import { eventsRouter } from "./routers/events";
 import { newsRouter } from "./routers/news";
 import { sportRouter } from "./routers/sport"; // Renamed import
-import { scheduleRouter } from "./routers/schedule"; // Added schedule router import
 import { personRouter } from "./routers/person"; 
 
 /**
@@ -22,7 +21,6 @@ export const appRouter = createTRPCRouter({
   events: eventsRouter,
   news: newsRouter,
   sport: sportRouter, // Renamed from desporto
-  schedule: scheduleRouter, // Added schedule router
   person: personRouter, // Added personRouter to the appRouter
 });
 
