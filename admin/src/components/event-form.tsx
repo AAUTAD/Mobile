@@ -5,15 +5,16 @@ import { useForm } from "react-hook-form";
 import { EventSchema, type Event } from "~/schemas/events-schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { computeSHA256 } from "~/lib/utils";
 import { getSignedURL } from "~/lib/aws";
+import { QuillWrapper } from "~/components/ui/react-quill-wrapper";
+import 'react-quill/dist/quill.snow.css';
 
 interface EventFormProps {
     event?: Event;
@@ -25,8 +26,23 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
     const [file, setFile] = useState<File | undefined>(undefined);
     const [fileUrl, setFileUrl] = useState<string | null | undefined>(event?.imageUrl);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     const utils = api.useUtils();
+
+    // Check for mobile viewport
+    useEffect(() => {
+        const checkIfMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+        
+        return () => {
+            window.removeEventListener('resize', checkIfMobile);
+        };
+    }, []);
 
     const createEventMutation = api.events.create.useMutation({
         onSuccess: async () => {
@@ -89,48 +105,57 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
     };
 
     async function onSubmit(data: Event) {
+        setIsSubmitting(true);
         let imageUrl: string | null | undefined = fileUrl;
 
-        console.log('hello', data)
+        try {
+            if (file) {
+                const checksum = await computeSHA256(file);
+                const signedURLResult = await getSignedURL(file.type, file.size, checksum);
 
-        if (file) {
-            const checksum = await computeSHA256(file);
-            const signedURLResult = await getSignedURL(file.type, file.size, checksum);
+                if (signedURLResult.error) {
+                    console.error(signedURLResult.error);
+                    setIsSubmitting(false);
+                    toast.error("Error uploading image");
+                    return;
+                }
 
-            if (signedURLResult.error) {
-                console.error(signedURLResult.error);
-                throw new Error(signedURLResult.error);
+                if (signedURLResult.success) {
+                    imageUrl = signedURLResult.success.url;
+                } else {
+                    setIsSubmitting(false);
+                    toast.error("Failed to get signed URL");
+                    return;
+                }
+
+                await fetch(imageUrl, {
+                    method: "PUT",
+                    body: file,
+                    headers: {
+                        "Content-Type": file.type,
+                    },
+                });
             }
 
-            if (signedURLResult.success) {
-                imageUrl = signedURLResult.success.url;
+            if (event) {
+                updateEventMutation.mutate({
+                    ...data,
+                    id: event.id,
+                    eventSchema: {
+                        ...data,
+                        imageUrl: imageUrl ? imageUrl.split("?")[0] : undefined,
+                    },
+                });
             } else {
-                throw new Error("Failed to get signed URL");
-            }
-
-            await fetch(imageUrl, {
-                method: "PUT",
-                body: file,
-                headers: {
-                    "Content-Type": file.type,
-                },
-            });
-        }
-
-        if (event) {
-            updateEventMutation.mutate({
-                ...data,
-                id: event.id,
-                eventSchema: {
+                createEventMutation.mutate({
                     ...data,
                     imageUrl: imageUrl ? imageUrl.split("?")[0] : undefined,
-                },
-            });
-        } else {
-            createEventMutation.mutate({
-                ...data,
-                imageUrl: imageUrl ? imageUrl.split("?")[0] : undefined,
-            });
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            setIsSubmitting(false);
+            toast.error("An error occurred while submitting the form");
         }
     }
 
@@ -144,7 +169,11 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
                         <FormItem>
                             <FormLabel>Title</FormLabel>
                             <FormControl>
-                                <Input placeholder="Event title" {...field} />
+                                <Input 
+                                    placeholder="Event title" 
+                                    {...field} 
+                                    className="w-full"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -157,7 +186,17 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
                         <FormItem>
                             <FormLabel>Description</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Event description" {...field} />
+                                <div className={`border rounded-md ${field.value ? '' : 'border-input'}`}>
+                                    <QuillWrapper
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        placeholder="Event description"
+                                        style={{ 
+                                            height: isMobile ? '200px' : '300px',
+                                            marginBottom: '40px'
+                                        }}
+                                    />
+                                </div>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -170,13 +209,17 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
                         <FormItem>
                             <FormLabel>Location</FormLabel>
                             <FormControl>
-                                <Input placeholder="Event location" {...field} />
+                                <Input 
+                                    placeholder="Event location" 
+                                    {...field} 
+                                    className="w-full"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <div className="grid grid-cols-2 gap-4">
+                <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
                     <FormField
                         control={form.control}
                         name="startDate"
@@ -188,6 +231,7 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
                                         type="datetime-local"
                                         value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""}
                                         onChange={(e) => field.onChange(new Date(e.target.value))}
+                                        className="w-full"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -205,6 +249,7 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
                                         type="datetime-local"
                                         value={field.value ? new Date(field.value).toISOString().slice(0, 16) : ""}
                                         onChange={(e) => field.onChange(new Date(e.target.value))}
+                                        className="w-full"
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -212,17 +257,47 @@ export function EventForm({ event, handleSuccess }: EventFormProps) {
                         )}
                     />
                 </div>
-                <div>
+                <div className="space-y-2">
                     <FormLabel>Image</FormLabel>
-                    <input type="file" accept="image/*" onChange={handleFileChange} />
-                    {fileUrl && (
-                        <div className="mt-2">
-                            <Image src={fileUrl} alt="Preview" className="h-20 w-auto" width={80} height={80} />
+                    <div className="grid gap-4 md:grid-cols-2 items-center">
+                        <div className="flex flex-col gap-2">
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                onChange={handleFileChange}
+                                className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm file:border-0 file:bg-transparent file:text-foreground file:font-medium"
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                Recommended: 1200x630px. Max size: 5MB.
+                            </p>
                         </div>
-                    )}
+                        {fileUrl && (
+                            <div className="mt-2 border rounded-md p-2 flex justify-center">
+                                <Image 
+                                    src={fileUrl} 
+                                    alt="Preview" 
+                                    width={200} 
+                                    height={150}
+                                    className="h-auto max-h-[150px] w-auto object-contain" 
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting..." : event ? "Update" : "Create"}
+                <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full md:w-auto"
+                >
+                    {isSubmitting ? (
+                        <>
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Submitting...
+                        </>
+                    ) : event ? "Update" : "Create"}
                 </Button>
             </form>
         </Form>

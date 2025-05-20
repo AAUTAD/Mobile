@@ -90,8 +90,8 @@ model Member {
   firstName          String
   lastName           String
   email              String   @unique
-registrationDate   DateTime @default(now())
-  nextPayment   DateTime?
+  registrationDate   DateTime @default(now())
+  nextPayment        DateTime?
   course             String
   studentNumber      String
   address            String
@@ -119,6 +119,7 @@ model News {
     id          String   @id @default(cuid())
     title       String
     content     String
+    type        String   @default("main")
     imageUrl    String?
     type        String // Added type column
     createdAt   DateTime @default(now())
