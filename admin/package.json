@@ -89,6 +89,6 @@
   },
   "packageManager": "npm@11.0.0",
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   }
 }

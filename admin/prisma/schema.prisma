@@ -1,166 +1,155 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
-    output   = "../node_modules/.prisma/client" // Added output path
-    binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  output        = "../node_modules/.prisma/client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
 }
 
 datasource db {
-    provider = "postgresql"
-    // Use pooled connection for the app
-    url      = env("DATABASE_URL")
-    // Use direct connection for migrations
-    directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// Necessary for Next auth
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    refresh_token_expires_in Int?
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    password      String?
-    accounts      Account[]
-    sessions      Session[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model Partner {
-    id String @id @default (cuid())
-    name String
-    nameUrl String
-    description String
-    discount String
-    latitude Decimal
-    longitude Decimal
-
-    facebook   String?  // Optional Facebook link
-    instagram  String?  // Optional Instagram link
-    website    String?  // Optional Website link
-
-    tags       String[] // Prisma supports arrays using native types
+  id          String   @id @default(cuid())
+  name        String
+  nameUrl     String
+  description String
+  discount    String
+  latitude    Decimal
+  longitude   Decimal
+  facebook    String?
+  instagram   String?
+  website     String?
+  tags        String[]
 }
 
-model Tag { 
-    id String @id @default (cuid())
-    name String
-    value String
+model Tag {
+  id    String @id @default(cuid())
+  name  String
+  value String
 }
 
 model Member {
-  id                 String @id @default(cuid())
-  memberId           String? @unique
-  firstName          String
-  lastName           String
-  email              String   @unique
-  registrationDate   DateTime @default(now())
-  nextPayment        DateTime?
-  course             String
-  studentNumber      String
-  address            String
-  postalCode         String
-  cardStatus         String
-  paymentStatus      String
-  locality           String
-  country            String
-  birthDate          DateTime
-  citizenCard        String   @unique
-  nif                String   @unique
-  phoneNumber        String
+  id               String    @id @default(cuid())
+  memberId         String?   @unique
+  firstName        String
+  lastName         String
+  email            String    @unique
+  registrationDate DateTime  @default(now())
+  course           String
+  studentNumber    String
+  address          String
+  postalCode       String
+  cardStatus       String
+  paymentStatus    String
+  locality         String
+  country          String
+  birthDate        DateTime
+  citizenCard      String    @unique
+  nif              String    @unique
+  phoneNumber      String
+  nextPayment      DateTime?
 }
 
 model CardAccesses {
-    id String @id @default(uuid())
-    email String
-    token String
-    verificationToken String
-    expirationDate DateTime 
-    expired Boolean @default(false)
+  id                String   @id @default(uuid())
+  email             String
+  token             String
+  verificationToken String
+  expired           Boolean  @default(false)
+  expirationDate    DateTime
 }
 
 model News {
-    id          String   @id @default(cuid())
-    title       String
-    content     String
-    type        String   @default("main")
-    imageUrl    String?
-    type        String // Added type column
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type      String  @default("main")
 }
 
 model Event {
-    id          String   @id @default(cuid())
-    title       String
-    description String
-    location    String
-    startDate   DateTime
-    endDate     DateTime
-    imageUrl    String?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  location    String
+  startDate   DateTime
+  endDate     DateTime
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Person {
-  id          String    @id @default(cuid())
-  name        String
-  contact     String?
-  email       String?   @unique
-  role        String
-  sports      Sport[]   
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deletedAt   DateTime?
+  id        String    @id @default(cuid())
+  name      String
+  contact   String?
+  email     String?   @unique
+  role      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  sports    Sport[]   @relation("PersonToSport")
 }
 
 model Sport {
-  id          String     @id @default(cuid())
-  name        String
-  location    String
-  details     String?
-  link        String?
-  imageUrl    String?
-  persons     Person[]   
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  deletedAt   DateTime?
+  id        String    @id @default(cuid())
+  name      String
+  location  String
+  details   String?
+  link      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  imageUrl  String?
+  persons   Person[]  @relation("PersonToSport")
 }
-
-
