@@ -19,7 +19,7 @@ export default function SportPage() {
     const { data: sports, isLoading, error } = api.sport.getAll.useQuery();
 
     const utils = api.useUtils();
-    const { mutate: deleteMutation } = api.sport.delete.useMutation({
+    const deleteMutation = api.sport.delete.useMutation({
         onSuccess: async () => {
             await utils.sport.getAll.invalidate();
             toast.success("Sport deleted successfully");
@@ -31,7 +31,7 @@ export default function SportPage() {
 
     const handleDelete = (id: string): void => {
         if (confirm("Are you sure you want to delete this sport?")) {
-            deleteMutation({ id });
+            deleteMutation.mutate({ id });
         }
     };
 
@@ -68,7 +68,7 @@ export default function SportPage() {
                                 <TableHead>Location</TableHead>
                                 <TableHead>Details</TableHead>
                                 <TableHead>Link</TableHead>
-                                <TableHead>People</TableHead> {/* Added this line */}
+                                <TableHead>People</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -94,7 +94,7 @@ export default function SportPage() {
                                             "N/A"
                                         )}
                                     </TableCell>
-                                    <TableCell> {/* Added this cell for associated people */}
+                                    <TableCell>
                                         {sport.persons && sport.persons.length > 0
                                             ? sport.persons.map(person => person.name).join(', ')
                                             : "No people"}

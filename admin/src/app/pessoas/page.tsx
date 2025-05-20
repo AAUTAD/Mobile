@@ -18,7 +18,7 @@ export default function PessoasPage() {
     const { data: people, isLoading, error } = api.person.getAll.useQuery();
 
     const utils = api.useUtils();
-    const { mutate: deleteMutation } = api.person.delete.useMutation({
+    const deleteMutation = api.person.delete.useMutation({
         onSuccess: async () => {
             await utils.person.getAll.invalidate();
             toast.success("Person deleted successfully");
@@ -30,7 +30,7 @@ export default function PessoasPage() {
 
     const handleDelete = (id: string): void => {
         if (confirm("Are you sure you want to delete this person?")) {
-            deleteMutation({ id });
+            deleteMutation.mutate({ id });
         }
     };
 
@@ -105,7 +105,13 @@ export default function PessoasPage() {
                                                         <DialogTitle>Edit Person</DialogTitle>
                                                     </DialogHeader>
                                                     <PersonForm
-                                                        person={editingPerson ?? undefined}
+                                                        person={editingPerson ? {
+                                                            ...editingPerson,
+                                                            sports: editingPerson.sports?.map(sport => ({
+                                                                id: sport.id,
+                                                                name: ""  // Default empty string for name if not present
+                                                            }))
+                                                        } : undefined}
                                                         handleSuccess={handleEditSuccess}
                                                     />
 

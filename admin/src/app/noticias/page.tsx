@@ -161,39 +161,39 @@ export default function NoticiasPage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Image</TableHead>
-                                    <TableHead>Type</TableHead>
-                                    <TableHead>Created At</TableHead>
-                                    <TableHead>Content</TableHead>
-                                    <TableHead>Actions</TableHead>
+                                    <TableHead>Title</TableHead>{/*
+                                    */}<TableHead>Image</TableHead>{/*
+                                    */}<TableHead>Type</TableHead>{/*
+                                    */}<TableHead>Created At</TableHead>{/*
+                                    */}<TableHead>Content</TableHead>{/*
+                                    */}<TableHead>Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {filteredNews?.map((item) => (
                                     <TableRow key={item.id}>
-                                        <TableCell className="font-medium">{item.title}</TableCell>
-                                        <TableCell>
+                                        <TableCell className="font-medium">{item.title}</TableCell>{/*
+                                        */}<TableCell>
                                             {item.imageUrl ? (
                                                 <img src={item.imageUrl} alt={item.title} className="h-12 w-12 object-cover rounded-md" />
                                             ) : (
                                                 "No Image"
                                             )}
-                                        </TableCell>
-                                        <TableCell>
+                                        </TableCell>{/*
+                                        */}<TableCell>
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.type === 'sports' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
                                                 {item.type === 'sports' ? 'Sports' : 'Main'}
                                             </span>
-                                        </TableCell>
-                                        <TableCell className="whitespace-nowrap">
+                                        </TableCell>{/*
+                                        */}<TableCell className="whitespace-nowrap">
                                             {format(new Date(item.createdAt), "PPP")}
-                                        </TableCell>
-                                        <TableCell className="max-w-[200px]">
+                                        </TableCell>{/*
+                                        */}<TableCell className="max-w-[200px]">
                                             <div className="line-clamp-2 text-sm">
                                                 {truncateText(item.content)}
                                             </div>
-                                        </TableCell>
-                                        <TableCell>
+                                        </TableCell>{/*
+                                        */}<TableCell>
                                             <div className="flex space-x-2">
                                                 <TooltipProvider>
                                                     <Tooltip>
@@ -202,7 +202,12 @@ export default function NoticiasPage() {
                                                                 variant="outline"
                                                                 size="icon"
                                                                 onClick={() => {
-                                                                    setViewContent(item);
+                                                                    // Cast the item to ensure type property is correctly typed as "main" | "sports"
+                                                                    const typedItem = {
+                                                                      ...item,
+                                                                      type: item.type as "main" | "sports"
+                                                                    };
+                                                                    setViewContent(typedItem);
                                                                     setViewContentOpen(true);
                                                                 }}
                                                             >
@@ -213,11 +218,17 @@ export default function NoticiasPage() {
                                                             <p>View full content</p>
                                                         </TooltipContent>
                                                     </Tooltip>
-                                                </TooltipProvider>
-
-                                                <Dialog open={editingNews == item && editOpen} onOpenChange={setEditOpen}>
+                                                </TooltipProvider>{/*
+                                                */}<Dialog open={editingNews == item && editOpen} onOpenChange={setEditOpen}>
                                                     <DialogTrigger asChild>
-                                                        <Button variant="outline" size="icon" onClick={() => setEditingNews(item)}>
+                                                        <Button variant="outline" size="icon" onClick={() => {
+                                                            // Cast the item to ensure type property is correctly typed as "main" | "sports"
+                                                            const typedItem = {
+                                                                ...item,
+                                                                type: item.type as "main" | "sports"
+                                                            };
+                                                            setEditingNews(typedItem);
+                                                        }}>
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
                                                     </DialogTrigger>
@@ -230,9 +241,8 @@ export default function NoticiasPage() {
                                                             handleSuccess={() => setEditingNews(null)}
                                                         />
                                                     </DialogContent>
-                                                </Dialog>
-
-                                                <TooltipProvider>
+                                                </Dialog>{/*
+                                                */}<TooltipProvider>
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
                                                             <Button

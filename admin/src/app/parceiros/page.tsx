@@ -65,7 +65,19 @@ export default function ParceirosPage() {
                 return (
                   <TableRow key={partner.id}>
                     <TableCell>
-                      <img alt="parner image" src={partner.nameUrl} className="h-auto w-12" />
+                      {
+                        partner.nameUrl != "" &&
+                        <Image
+                          alt="partner image"
+                          src={partner.nameUrl}
+                          width={48}
+                          height={48}
+                          className="h-auto w-12"
+                        />
+                      }
+                      {
+                        partner.nameUrl == "" && <div>No Image</div>
+                      }
                     </TableCell>
                     <TableCell>{partner.name}</TableCell>
                     <TableCell>{partner.description}</TableCell>

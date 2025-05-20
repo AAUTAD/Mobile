@@ -1,50 +1,71 @@
 "use client";
 
-import { forwardRef, useRef, useEffect } from 'react';
+import React, { forwardRef, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import type { ReactInstance } from 'react';
 import 'react-quill/dist/quill.snow.css';
 
 // Function to create a polyfill for findDOMNode that avoids the React 18 warning
 const createFindDOMNodePolyfill = () => {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined') {
+    return undefined; // Return undefined when not in browser
+  }
   
-  // Return a function that will be used as findDOMNode replacement
-  return (component) => {
+  // Return a function that matches React's findDOMNode signature
+  return function findDOMNode(
+    component: ReactInstance | null | undefined
+  ): Element | Text | null {
     if (!component) return null;
     
     // If it's a DOM node, just return it
-    if (component.nodeType) return component;
+    if ('nodeType' in component) return component as Element;
+    
+    // Use type assertion for internal React properties
+    const comp = component as any;
     
     // If it has a ref property with current, use that
-    if (component.ref && component.ref.current) return component.ref.current;
+    if (comp.ref?.current) return comp.ref.current;
     
     // If component has _reactInternalFiber with stateNode, use that
-    if (component._reactInternalFiber && component._reactInternalFiber.stateNode) {
-      return component._reactInternalFiber.stateNode;
+    if (comp._reactInternalFiber?.stateNode) {
+      return comp._reactInternalFiber.stateNode;
     }
     
     return null;
   };
 };
 
+// Define the props for our QuillComponent
+interface QuillComponentProps {
+  forwardedRef?: React.Ref<any>;
+  [key: string]: any;
+}
+
 // Dynamically import ReactQuill and patch it
-const ReactQuill = dynamic(
+const ReactQuill = dynamic<QuillComponentProps>(
   async () => {
     // This applies our patch to ReactDOM before ReactQuill is loaded
     if (typeof window !== 'undefined') {
       const ReactDOM = await import('react-dom');
       
-      // Only replace findDOMNode if it doesn't exist
-      if (!ReactDOM.default.findDOMNode) {
-        ReactDOM.default.findDOMNode = createFindDOMNodePolyfill();
+      // Type-safe application of our polyfill
+      const findDOMNodePolyfill = createFindDOMNodePolyfill();
+      // Only replace if our polyfill exists and findDOMNode doesn't
+      if (findDOMNodePolyfill && !ReactDOM.default.findDOMNode) {
+        // We need to use type assertion to bypass TypeScript's type checking
+        (ReactDOM.default as any).findDOMNode = findDOMNodePolyfill;
       }
     }
     
     const { default: RQ } = await import('react-quill');
     
-    return function QuillComponent({ forwardedRef, ...props }) {
+    // Create a component that passes forwardedRef to ReactQuill
+    const QuillComponent = ({ forwardedRef, ...props }: QuillComponentProps) => {
       return <RQ ref={forwardedRef} {...props} />;
     };
+    
+    QuillComponent.displayName = 'QuillComponent';
+    return QuillComponent;
   },
   { ssr: false }
 );
