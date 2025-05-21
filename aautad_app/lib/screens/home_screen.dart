@@ -7,6 +7,7 @@ import 'package:aautad_app/services/uuid_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // for styling
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import '../services/api_service.dart';
 import '../models/partner.dart';
@@ -55,6 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<bool> _hasToken() async {
     String? token = await secureStorage.read(key: 'jwt_token');
     return token != null && token.isNotEmpty;
+  }
+
+  Future<void> _refreshData() async {
+    final partners = await apiService.fetchPartners();
+    setState(() {
+      allPartners = partners;
+      filteredPartners = partners;
+    });
   }
 
   @override
@@ -131,48 +140,50 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       backgroundColor: Color(0xFFF7F7F7),
-      body: FutureBuilder<List<Partner>>(
-        future: futurePartners,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            final partners = snapshot.data!;
-            return SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header Section
-                    HeaderSection(),
-                    NewsSection(filterType: 'not_sport'),
-                    SizedBox(height: 20),
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: FutureBuilder<List<Partner>>(
+          future: futurePartners,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              return SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header Section
+                      HeaderSection(),
+                      NewsSection(filterType: 'not_sport'),
+                      SizedBox(height: 20),
 
-                    // Featured Offer Card
-                    FeaturedSection(),
-                    SizedBox(height: 20),
+                      // Featured Offer Card
+                      FeaturedSection(),
+                      SizedBox(height: 20),
 
-                    // Categories Section
-                    CategoriesSection(
-                      onCategorySelected: filterPartnersByCategory,
-                      selectedCategory: selectedCategory,
-                    ),
-                    SizedBox(height: 20),
+                      // Categories Section
+                      CategoriesSection(
+                        onCategorySelected: filterPartnersByCategory,
+                        selectedCategory: selectedCategory,
+                      ),
+                      SizedBox(height: 20),
 
-                    // Partners Section
-                    PartnersSection(partners: filteredPartners),
+                      // Partners Section
+                      PartnersSection(partners: filteredPartners),
 
-                    SizedBox(height: 20),
-                  ],
+                      SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          return Center(child: Text('No Data'));
-        },
+              );
+            }
+            return Center(child: Text('No Data'));
+          },
+        ),
       ),
     );
   }
@@ -189,34 +200,56 @@ Future<Widget> _buildMemberCard(BuildContext context) async {
 
   final data = decodedToken['returnObject'];
 
+  // Get user data
+  final String firstName = data['firstName'] ?? 'No Name';
+  final String lastName = data['lastName'] ?? '';
+  final String memberId = data['memberId'] ?? 'N/A';
+
   return Column(children: [
     Text(
-      'Member Card',
+      'Cartão de Sócio',
       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
     ),
-    // Add more widgets to display the member card details
     SizedBox(height: 40),
     Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          alignment: Alignment.topCenter,
-          height: 200,
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.blue[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: 220,
+          child: Stack(
             children: [
-              Text(
-                '${data['firstName'] ?? 'No Name'} ${data['lastName'] ?? ''}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              SvgPicture.asset(
+                'lib/assets/images/cartao_socio_final.svg',
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.contain,
               ),
-              Text(
-                'ID: ${data['memberId'] ?? 'N/A'}',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+              // Position name text
+              Positioned(
+                top: 80,
+                left: 30,
+                child: Text(
+                  '${firstName.toUpperCase()} ${lastName.toUpperCase()}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2A31D9), // Match the blue from SVG
+                  ),
+                ),
+              ),
+              // Position member ID
+              Positioned(
+                bottom: 75,
+                right: 85,
+                child: Text(
+                  memberId,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2A31D9), // Match the blue from SVG
+                  ),
+                ),
               ),
             ],
           ),

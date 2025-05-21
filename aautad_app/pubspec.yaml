@@ -27,6 +27,7 @@ flutter:
   uses-material-design: true
   assets:
     - lib/assets/images/
+    - lib/assets/images/cartao_socio_final.svg
     - lib/assets/fonts/
     - lib/assets/icons/
     - lib/assets/icons/logo.svg

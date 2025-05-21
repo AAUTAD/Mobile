@@ -24,10 +24,9 @@ class HeaderSection extends StatelessWidget {
           Center(
             child: Container(
               width: 350,
-              height: 100,
-              margin: EdgeInsets.only(top: 140), // Add padding top
+              height: 180,
+              margin: EdgeInsets.only(top: 100), // Add padding top
               decoration: BoxDecoration(
-                color: Color.fromRGBO(249, 238, 220, 1),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -36,12 +35,11 @@ class HeaderSection extends StatelessWidget {
                   color: Colors.white,
                   width: 2,
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [],
+                image: DecorationImage(
+                  image:
+                      AssetImage('lib/assets/images/cartao_socio_frente.png'),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
                 ),
               ),
             ),

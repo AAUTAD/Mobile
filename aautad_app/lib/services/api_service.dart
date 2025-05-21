@@ -7,17 +7,17 @@ import '../models/partner.dart';
 import '../models/sport_info.dart';
 
 String getBaseUrl() {
-  if (Platform.isAndroid) {
-    // Option 1: Android Emulator (10.0.2.2 is the special IP that Android emulator
-    // uses to communicate with the host machine)
-    return 'http://10.0.2.2:3000/api';
-  } else if (Platform.isIOS) {
-    // For iOS simulator
-    return 'http://localhost:3000/api';
-  } else {
-    // For web or other platforms
-    return 'http://localhost:3000/api';
-  }
+  // if (Platform.isAndroid) {
+  //   // Option 1: Android Emulator (10.0.2.2 is the special IP that Android emulator
+  //   // uses to communicate with the host machine)
+  //   return 'http://10.0.2.2:3000/api';
+  // } else if (Platform.isIOS) {
+  //   // For iOS simulator
+  //   return 'http://localhost:3000/api';
+  // } else {
+  //   // For web or other platforms
+  //   return 'http://localhost:3000/api';
+  // }
 
   // Uncomment and use one of these alternatives if needed:
 
@@ -26,6 +26,8 @@ String getBaseUrl() {
 
   // Option 3: Using ngrok for remote testing (replace with your actual ngrok URL)
   // return 'https://your-ngrok-url.ngrok.io/api';
+
+  return 'https://mobile.aautad.pt/api';
 }
 
 class ApiService {
