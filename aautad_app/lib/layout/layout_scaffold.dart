@@ -11,22 +11,19 @@ class LayoutScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false, // The navigation bar will handle bottom padding
-        child: Stack(
-          children: [
-            // Main content
-            navigationShell,
+      body: Stack(
+        children: [
+          // Main content
+          navigationShell,
 
-            // Floating navigation bar
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: FloatingNavBar(navigationShell: navigationShell),
-            ),
-          ],
-        ),
+          // Floating navigation bar
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: FloatingNavBar(navigationShell: navigationShell),
+          ),
+        ],
       ),
     );
   }
