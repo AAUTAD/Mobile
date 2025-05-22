@@ -23,6 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Partner> filteredPartners = [];
   String selectedCategory = '';
 
+  // Key to control the news section
+  final GlobalKey<NewsSectionState> _newsSectionKey =
+      GlobalKey<NewsSectionState>();
+
   // Scroll controller to detect scroll position
   final ScrollController _scrollController = ScrollController();
   double _scrollOpacity = 0.0; // Use a double for gradual opacity change
@@ -84,6 +88,15 @@ class _HomeScreenState extends State<HomeScreen> {
   // Removed unused _hasToken method
 
   Future<void> _refreshData() async {
+    // Refresh news directly through the key
+    if (_newsSectionKey.currentState != null) {
+      await _newsSectionKey.currentState!.refreshNews();
+    }
+
+    // Also refresh sports data
+    await apiService.fetchSports();
+
+    // Update partners
     final partners = await apiService.fetchPartners();
     setState(() {
       allPartners = partners;
@@ -146,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         // Header Section
                         HeaderSection(),
-                        NewsSection(filterType: 'main'),
+                        NewsSection(key: _newsSectionKey, filterType: 'main'),
                         SizedBox(height: 20),
 
                         // Featured Offer Card

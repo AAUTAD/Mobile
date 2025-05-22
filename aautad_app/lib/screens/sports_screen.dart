@@ -8,6 +8,15 @@ class SportsScreen extends StatefulWidget {
 }
 
 class _SportsScreenState extends State<SportsScreen> {
+  final GlobalKey<NewsSectionState> _newsSectionKey =
+      GlobalKey<NewsSectionState>();
+
+  Future<void> _refreshData() async {
+    // Explicitly tell the NewsSection to refresh its data
+    await _newsSectionKey.currentState?.refreshNews();
+    return Future.value();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +41,15 @@ class _SportsScreenState extends State<SportsScreen> {
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: NewsSection(filterType: 'sport'),
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: NewsSection(key: _newsSectionKey, filterType: 'sports'),
+          ),
+        ),
       ),
     );
   }

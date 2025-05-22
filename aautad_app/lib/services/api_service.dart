@@ -55,6 +55,21 @@ class ApiService {
     }
   }
 
+  Future<List<News>> fetchNewsByType(String type) async {
+    // Get all news first
+    final allNews = await fetchNews();
+    // Filter by type
+    return allNews.where((news) => news.type == type).toList();
+  }
+
+  Future<List<News>> fetchMainNews() async {
+    return fetchNewsByType('main');
+  }
+
+  Future<List<News>> fetchSportsNews() async {
+    return fetchNewsByType('sports');
+  }
+
   Future<List<SportInfo>> fetchSports() async {
     final response = await http.get(Uri.parse('$baseUrl/desporto/'));
 
