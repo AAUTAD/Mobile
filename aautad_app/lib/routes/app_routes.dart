@@ -1,7 +1,7 @@
 // lib/routes/app_routes.dart
 import 'package:aautad_app/layout/layout_scaffold.dart';
 import 'package:aautad_app/routes/routes.dart';
-import 'package:aautad_app/screens/eventos_screen.dart';
+import 'package:aautad_app/screens/events_screen.dart';
 import 'package:aautad_app/screens/sports_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
@@ -33,7 +33,7 @@ final router = GoRouter(
                   path: Routes.eventsPage,
                   name: Routes.eventsPage,
                   pageBuilder: (context, state) {
-                    return MaterialPage(child: EventosScreen());
+                    return MaterialPage(child: EventsScreen());
                   }),
             ],
           ),

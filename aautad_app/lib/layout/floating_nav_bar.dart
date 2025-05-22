@@ -77,7 +77,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
             height: MediaQuery.of(context).size.height * 0.7,
             child: Center(
               child: RotatedBox(
-                quarterTurns: 1, 
+                quarterTurns: 1,
                 child: Image.asset(
                   'lib/assets/images/cartao_socio_tras.png',
                   fit: BoxFit.contain,
@@ -100,7 +100,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
       ),
     ]);
   }
-  
+
   // Open card bottom sheet
   void _openCardSheet(BuildContext context) async {
     bool hasToken = await _hasToken();
