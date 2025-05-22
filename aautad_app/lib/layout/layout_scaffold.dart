@@ -1,7 +1,5 @@
-import 'package:aautad_app/constants/colors.dart';
-import 'package:aautad_app/models/destinations.dart';
+import 'package:aautad_app/layout/floating_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 class LayoutScaffold extends StatelessWidget {
@@ -13,25 +11,22 @@ class LayoutScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: navigationShell.currentIndex,
-        backgroundColor: AppColors.navBar,
-        onTap: navigationShell.goBranch,
-        selectedItemColor: Colors.white,
-        items: destinations
-            .map((destination) => BottomNavigationBarItem(
-                  label: destination.label,
-                  icon: SvgPicture.asset(
-                    'lib/assets/icons/logo.svg',
-                    height: 24,
-                    color: navigationShell.currentIndex ==
-                            destinations.indexOf(destination)
-                        ? Colors.white
-                        : null,
-                  ),
-                ))
-            .toList(),
+      body: SafeArea(
+        bottom: false, // The navigation bar will handle bottom padding
+        child: Stack(
+          children: [
+            // Main content
+            navigationShell,
+
+            // Floating navigation bar
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: FloatingNavBar(navigationShell: navigationShell),
+            ),
+          ],
+        ),
       ),
     );
   }

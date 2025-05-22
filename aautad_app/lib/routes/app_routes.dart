@@ -47,6 +47,18 @@ final router = GoRouter(
                   }),
             ],
           ),
+          // This branch is just a placeholder since we handle the card through a modal
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                  path: Routes.memberCard,
+                  name: Routes.memberCard,
+                  pageBuilder: (context, state) {
+                    // This page won't actually be shown since we use a modal
+                    return MaterialPage(child: SizedBox());
+                  }),
+            ],
+          ),
         ])
   ],
 );
