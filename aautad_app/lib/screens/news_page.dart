@@ -12,12 +12,13 @@ class NewsDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon:
+              Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
           onPressed: () =>
               Navigator.pop(context), // Go back to the previous screen
         ),
@@ -48,7 +49,13 @@ class NewsDetailsPage extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     "${article.createdAt.day.toString().padLeft(2, '0')}-${article.createdAt.month.toString().padLeft(2, '0')}-${article.createdAt.year}",
-                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                    style: TextStyle(
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color!
+                            .withOpacity(0.7),
+                        fontSize: 14),
                   ),
 
                   SizedBox(height: 8),
@@ -57,7 +64,7 @@ class NewsDetailsPage extends StatelessWidget {
                   Text(
                     article.title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).textTheme.titleLarge!.color,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -68,7 +75,9 @@ class NewsDetailsPage extends StatelessWidget {
                   // Full Content
                   Text(
                     article.content,
-                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
+                        fontSize: 16),
                   ),
                 ],
               ),

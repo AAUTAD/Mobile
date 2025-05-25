@@ -299,9 +299,9 @@ class _AthleteRegistrationPageState extends State<AthleteRegistrationPage> {
                 onPressed: _submitForm,
                 child: Text('Submeter Inscrição'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  side: BorderSide(color: Color(0xFF2B2A2A)),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  side: BorderSide(color: Theme.of(context).colorScheme.outline),
                 ),
               ),
             ],

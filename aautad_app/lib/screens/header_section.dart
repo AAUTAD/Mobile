@@ -12,8 +12,14 @@ class HeaderSection extends StatelessWidget {
             height: 250,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('lib/assets/images/pedrinhas.png'),
+                image: AssetImage('lib/assets/images/header2.png'),
                 fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),

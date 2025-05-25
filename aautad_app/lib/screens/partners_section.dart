@@ -16,10 +16,10 @@ class PartnersSection extends StatelessWidget {
           padding: Spacings.horizontalPadding,
           child: Text(
             'Explorar',
-            style: TextStyle(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF464646)),
+                color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         SizedBox(height: Spacings.VerticalSpacing),
@@ -60,7 +60,7 @@ class PartnerCard extends StatelessWidget {
         child: Container(
           width: 150,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.white, // Back to white
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -72,7 +72,7 @@ class PartnerCard extends StatelessWidget {
                   Container(
                     height: 145,
                     width: double.infinity,
-                    color: Colors.white,
+                    color: Colors.white, // Back to simple white background
                   ),
                   Positioned(
                     child: Container(

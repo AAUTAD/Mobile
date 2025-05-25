@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:aautad_app/screens/news_section.dart';
 import 'package:aautad_app/screens/sport_details_page.dart';
 import 'package:aautad_app/screens/athlete_registration_page.dart';
 import 'package:aautad_app/constants/spacings.dart';
+import '../providers/theme_provider.dart';
 
 class SportsScreen extends StatefulWidget {
   @override
@@ -27,13 +29,28 @@ class _SportsScreenState extends State<SportsScreen> {
           'Desporto',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Theme.of(context).appBarTheme.foregroundColor,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
+        actions: [
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return IconButton(
+                icon: Icon(
+                  themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                onPressed: () {
+                  themeProvider.toggleTheme();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: _refreshData,

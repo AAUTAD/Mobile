@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/event_model.dart';
 import '../services/event_service.dart';
+import '../providers/theme_provider.dart';
 import 'event_detail_screen.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -30,8 +32,23 @@ class _EventsScreenState extends State<EventsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
+        actions: [
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return IconButton(
+                icon: Icon(
+                  themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                onPressed: () {
+                  themeProvider.toggleTheme();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -64,8 +81,9 @@ class _EventsScreenState extends State<EventsScreen> {
                       },
                       child: Text('Tentar novamente'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFE91E63),
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ],
@@ -76,7 +94,8 @@ class _EventsScreenState extends State<EventsScreen> {
             }
 
             return ListView.builder(
-              padding: EdgeInsets.fromLTRB(16, 16, 16, 136), // Add bottom padding for floating nav bar (16 + 120)
+              padding: EdgeInsets.fromLTRB(16, 16, 16,
+                  136), // Add bottom padding for floating nav bar (16 + 120)
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final event = snapshot.data![index];
@@ -131,11 +150,11 @@ class EventCard extends StatelessWidget {
                   return Container(
                     height: 180,
                     width: double.infinity,
-                    color: Colors.grey[300],
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     child: Icon(
                       Icons.image_not_supported,
                       size: 50,
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   );
                 },
@@ -144,7 +163,7 @@ class EventCard extends StatelessWidget {
                   return Container(
                     height: 180,
                     width: double.infinity,
-                    color: Colors.grey[200],
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     child: Center(
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
@@ -173,12 +192,15 @@ class EventCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(Icons.location_on,
-                          size: 16, color: Colors.grey[700]),
+                          size: 16,
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                       SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           event.location,
-                          style: TextStyle(color: Colors.grey[800]),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface),
                         ),
                       ),
                     ],
@@ -187,11 +209,14 @@ class EventCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(Icons.calendar_today,
-                          size: 16, color: Colors.grey[700]),
+                          size: 16,
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                       SizedBox(width: 4),
                       Text(
                         _formatDate(event.startDate),
-                        style: TextStyle(color: Colors.grey[800]),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface),
                       ),
                     ],
                   ),
@@ -211,7 +236,7 @@ class EventCard extends StatelessWidget {
                       child: Text(
                         'Ver mais',
                         style: TextStyle(
-                          color: Color(0xFFE91E63),
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

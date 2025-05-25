@@ -20,7 +20,7 @@ class EventosScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Eventos'),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
       body: ListView.builder(
         itemCount: events.length,

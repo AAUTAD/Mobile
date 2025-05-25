@@ -53,10 +53,10 @@ class NewsSectionState extends State<NewsSection> {
           padding: Spacings.horizontalPadding,
           child: Text(
             widget.filterType == 'sports' ? 'Notícias' : 'Notícias',
-            style: TextStyle(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF464646),
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),

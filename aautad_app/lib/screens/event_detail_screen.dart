@@ -137,7 +137,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                 child: Text(
                                   'VER NO MAPA',
                                   style: TextStyle(
-                                    color: Color(0xFFE91E63),
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

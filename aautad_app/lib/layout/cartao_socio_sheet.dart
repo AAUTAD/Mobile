@@ -100,8 +100,8 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFE91E63),
-              foregroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -151,7 +151,7 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(color: Color(0xFFE91E63), width: 2.0),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2.0),
               ),
             ),
             keyboardType: TextInputType.emailAddress,
@@ -161,8 +161,8 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
         ElevatedButton(
           onPressed: _handleAssociateCard,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFE91E63),
-            foregroundColor: Colors.white,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
