@@ -160,23 +160,30 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                           animation: _animationController,
                           builder: (context, child) {
                             return Transform.scale(
-                              scale: isSelected ? _scaleAnimation.value : 1.0,
-                              child: index == 0
-                                  ? SvgPicture.asset(
-                                      'lib/assets/icons/logo.svg',
-                                      height: 24,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.white.withOpacity(0.5),
-                                    )
-                                  : Icon(
-                                      destination.icon,
-                                      size: 24,
-                                      color: isSelected || isCardItem
-                                          ? Colors.white
-                                          : Colors.white.withOpacity(0.5),
-                                    ),
-                            );
+                                scale: isSelected ? _scaleAnimation.value : 1.0,
+                                child: index == 0
+                                    ? SvgPicture.asset(
+                                        'lib/assets/icons/logo.svg',
+                                        height: 24,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.white.withOpacity(0.5),
+                                      )
+                                    : destination.image != ''
+                                        ? Image.asset(
+                                            destination.image,
+                                            height: 24,
+                                            color: isSelected || isCardItem
+                                                ? Colors.white
+                                                : Colors.white.withAlpha((0.5 * 255).toInt()),
+                                          )
+                                        : Icon(
+                                            destination.icon,
+                                            size: 24,
+                                            color: isSelected || isCardItem
+                                                ? Colors.white
+                                                : Colors.white.withOpacity(0.5),
+                                          ));
                           },
                         ),
                         const SizedBox(height: 4),

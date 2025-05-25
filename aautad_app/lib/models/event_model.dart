@@ -1,3 +1,5 @@
+import '../utils/utils.dart';
+
 class EventModel {
   final String id;
   final String title;
@@ -24,9 +26,9 @@ class EventModel {
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
       id: json['id'] ?? '',
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      location: json['location'] ?? '',
+      title: fixEncoding(json['title'] ?? ''),
+      description: fixEncoding(json['description'] ?? ''),
+      location: fixEncoding(json['location'] ?? ''),
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'])
           : DateTime.now(),
