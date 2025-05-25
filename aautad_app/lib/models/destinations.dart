@@ -16,9 +16,9 @@ const basePath = 'assets/images/destinations/';
 
 const destinations = [
   Destination(label: 'Home', icon: Icons.home),
-  Destination(label: 'Events', icon: Icons.event),
-  Destination(label: 'Sports', icon: Icons.sports_baseball_outlined),
-  Destination(label: 'Card', icon: Icons.qr_code),
+  Destination(label: 'Eventos', icon: Icons.event),
+  Destination(label: 'Desporto', icon: Icons.map_outlined),
+  Destination(label: 'Cartão', icon: Icons.qr_code),
 ];
 
 Function createIconFromImage(String imagePath) {

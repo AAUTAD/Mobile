@@ -19,7 +19,7 @@ class PartnersSection extends StatelessWidget {
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF464646)),
+                color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         SizedBox(height: Spacings.VerticalSpacing),
@@ -60,7 +60,7 @@ class PartnerCard extends StatelessWidget {
         child: Container(
           width: 150,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -72,7 +72,7 @@ class PartnerCard extends StatelessWidget {
                   Container(
                     height: 145,
                     width: double.infinity,
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                   ),
                   Positioned(
                     child: Container(
@@ -80,7 +80,7 @@ class PartnerCard extends StatelessWidget {
                       width: 81,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         image: DecorationImage(
                           image: NetworkImage(partner.nameUrl),
                           fit: BoxFit.contain,

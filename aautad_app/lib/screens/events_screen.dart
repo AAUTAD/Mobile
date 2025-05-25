@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/event_model.dart';
 import '../services/event_service.dart';
+import '../providers/theme_provider.dart';
 import 'event_detail_screen.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -30,8 +32,23 @@ class _EventsScreenState extends State<EventsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
+        actions: [
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return IconButton(
+                icon: Icon(
+                  themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                onPressed: () {
+                  themeProvider.toggleTheme();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -51,10 +68,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   children: [
                     Icon(Icons.error_outline, size: 60, color: Colors.red),
                     SizedBox(height: 16),
-                    Text(
-                      'Erro ao carregar eventos',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    Text('Erro ao carregar eventos', style: TextStyle(fontSize: 18)),
                     SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () {
@@ -64,8 +78,8 @@ class _EventsScreenState extends State<EventsScreen> {
                       },
                       child: Text('Tentar novamente'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFE91E63),
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ],
@@ -77,91 +91,75 @@ class _EventsScreenState extends State<EventsScreen> {
 
             final allEvents = snapshot.data!;
             final now = DateTime.now();
-            
-            // Separate events into upcoming and past
-            final upcomingEvents = allEvents.where((event) => 
-              event.startDate.isAfter(now) || event.endDate.isAfter(now)
-            ).toList();
-            
-            final pastEvents = allEvents.where((event) => 
-              event.endDate.isBefore(now)
-            ).toList();
+
+            final upcomingEvents = allEvents
+                .where((event) => event.startDate.isAfter(now) || event.endDate.isAfter(now))
+                .toList();
+
+            final pastEvents = allEvents
+                .where((event) => event.endDate.isBefore(now))
+                .toList();
 
             return ListView(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 136),
               children: [
-                // Upcoming Events Section
                 if (upcomingEvents.isNotEmpty) ...[
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFE91E63).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Color(0xFFE91E63).withOpacity(0.3)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.event_available, color: Color(0xFFE91E63)),
-                        SizedBox(width: 8),
-                        Text(
-                          'Próximos Eventos',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFE91E63),
-                          ),
-                        ),
-                      ],
-                    ),
+                  SectionHeader(
+                    icon: Icons.event_available,
+                    title: 'Próximos Eventos',
+                    color: Color(0xFFE91E63),
                   ),
                   ...upcomingEvents.map((event) => EventCard(event: event, isPast: false)),
                   SizedBox(height: 24),
                 ],
-                
-                // Past Events Section
                 if (pastEvents.isNotEmpty) ...[
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    margin: EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.history, color: Colors.grey[600]),
-                        SizedBox(width: 8),
-                        Text(
-                          'Eventos Passados',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
+                  SectionHeader(
+                    icon: Icons.history,
+                    title: 'Eventos Passados',
+                    color: Colors.grey[600]!,
                   ),
                   ...pastEvents.map((event) => EventCard(event: event, isPast: true)),
                 ],
-                
-                // Show message if no events
-                if (upcomingEvents.isEmpty && pastEvents.isEmpty)
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(32),
-                      child: Text(
-                        'Sem eventos disponíveis',
-                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                      ),
-                    ),
-                  ),
               ],
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class SectionHeader extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color color;
+
+  const SectionHeader({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color),
+          SizedBox(width: 8),
+          Text(
+            title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+          ),
+        ],
       ),
     );
   }
@@ -181,167 +179,153 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 3,
       child: InkWell(
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => EventDetailScreen(event: event),
-            ),
+            MaterialPageRoute(builder: (context) => EventDetailScreen(event: event)),
           );
         },
         borderRadius: BorderRadius.circular(12),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Stack(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Stack(
-                    children: [
-                      Image.network(
-                        event.imageUrl,
-                        width: double.infinity,
+                  child: Image.network(
+                    event.imageUrl,
+                    width: double.infinity,
+                    height: 180,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
                         height: 180,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            height: 180,
-                            width: double.infinity,
-                            color: Colors.grey[300],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey[600],
-                            ),
-                          );
-                        },
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            height: 180,
-                            width: double.infinity,
-                            color: Colors.grey[200],
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            ),
-                          );
-                        },
+                        width: double.infinity,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: 180,
+                        width: double.infinity,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                if (isPast)
+                  Container(
+                    height: 180,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.3),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                  ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          event.title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isPast
+                                ? Theme.of(context).disabledColor
+                                : Theme.of(context).textTheme.bodyLarge?.color,
+                          ),
+                        ),
                       ),
-                      // Overlay for past events
                       if (isPast)
                         Container(
-                          height: 180,
-                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.3),
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              event.title,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: isPast ? Colors.grey[600] : Colors.black,
-                              ),
-                            ),
-                          ),
-                          if (isPast)
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                'Finalizado',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on,
-                              size: 16, color: isPast ? Colors.grey[500] : Colors.grey[700]),
-                          SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              event.location,
-                              style: TextStyle(
-                                color: isPast ? Colors.grey[500] : Colors.grey[800],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Icon(Icons.calendar_today,
-                              size: 16, color: isPast ? Colors.grey[500] : Colors.grey[700]),
-                          SizedBox(width: 4),
-                          Text(
-                            _formatDate(event.startDate),
-                            style: TextStyle(
-                              color: isPast ? Colors.grey[500] : Colors.grey[800],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EventDetailScreen(event: event),
-                              ),
-                            );
-                          },
                           child: Text(
-                            'Ver mais',
+                            'Finalizado',
                             style: TextStyle(
-                              color: isPast ? Colors.grey[500] : Color(0xFFE91E63),
-                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on, size: 16, color: Theme.of(context).iconTheme.color),
+                      SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          event.location,
+                          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today, size: 16, color: Theme.of(context).iconTheme.color),
+                      SizedBox(width: 4),
+                      Text(
+                        _formatDate(event.startDate),
+                        style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EventDetailScreen(event: event)),
+                        );
+                      },
+                      child: Text(
+                        'Ver mais',
+                        style: TextStyle(
+                          color: isPast
+                              ? Theme.of(context).disabledColor
+                              : Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

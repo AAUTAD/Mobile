@@ -6,8 +6,10 @@ import 'package:aautad_app/screens/partners_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // for styling
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../models/partner.dart';
+import '../providers/theme_provider.dart';
 
 final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
@@ -31,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   double _scrollOpacity = 0.0; // Use a double for gradual opacity change
   final double _maxScrollForFullOpacity =
-      20.0; // Scroll distance for max opacity
+      100.0; // Scroll distance for max opacity
 
   @override
   void initState() {
@@ -107,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF7F7F7),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // Add transparent AppBar with centered logo that stays transparent when scrolling
       extendBodyBehindAppBar:
           true, // This ensures content goes behind the AppBar
@@ -119,17 +121,59 @@ class _HomeScreenState extends State<HomeScreen> {
         surfaceTintColor: Colors.transparent,
         automaticallyImplyLeading: false,
         toolbarHeight: 50, // Standard height
+        actions: [
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return Container(
+                margin: EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.white.withOpacity(0.9)
+                      : Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: Theme.of(context).brightness == Brightness.light
+                      ? [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          )
+                        ]
+                      : null,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    themeProvider.isDarkMode
+                        ? Icons.light_mode
+                        : Icons.dark_mode,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  onPressed: () {
+                    themeProvider.toggleTheme();
+                  },
+                ),
+              );
+            },
+          ),
+          SizedBox(width: 8),
+        ],
         flexibleSpace: Container(
-          // No need for AnimatedContainer as we're already smoothly changing the opacity
-          color: Colors.black.withOpacity(
-              _scrollOpacity * 0.4), // Gradually increase to max opacity of 0.4
+          // Adaptive background color based on theme and scroll
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.white.withOpacity(_scrollOpacity * 0.95)
+              : Colors.black.withOpacity(_scrollOpacity * 0.4),
           child: Padding(
             padding: EdgeInsets.only(
                 top: 45), // Add top margin only to push logo down
             child: Center(
-              child: Image.asset(
-                'lib/assets/images/logo.png',
-                height: 40,
+              child: ColorFiltered(
+                colorFilter: Theme.of(context).brightness == Brightness.light
+                    ? ColorFilter.mode(Colors.transparent, BlendMode.multiply)
+                    : ColorFilter.mode(Colors.white, BlendMode.modulate),
+                child: Image.asset(
+                  'lib/assets/images/logo.png',
+                  height: 40,
+                ),
               ),
             ),
           ),
@@ -144,13 +188,51 @@ class _HomeScreenState extends State<HomeScreen> {
             future: futurePartners,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Loading...',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 48,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Error: ${snapshot.error}',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               } else if (snapshot.hasData) {
                 return SingleChildScrollView(
                   controller: _scrollController, // Use our scroll controller
-                  padding: EdgeInsets.zero, // Remove default padding
+                  padding: EdgeInsets.only(
+                      bottom: 120), // Add bottom padding for floating nav bar
                   child: Center(
                     child: Column(
                       mainAxisAlignment:
@@ -182,7 +264,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               }
-              return Center(child: Text('No Data'));
+              return Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.inbox_outlined,
+                        color: Theme.of(context).iconTheme.color,
+                        size: 48,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'No Data Available',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           ),
         ),

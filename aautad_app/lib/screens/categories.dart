@@ -21,7 +21,7 @@ class CategoriesSection extends StatelessWidget {
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF464646)),
+                color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         SizedBox(height: 18),
@@ -96,8 +96,8 @@ class CategoryIconSvg extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
             child: Container(
               color: isSelected
-                  ? Colors.orange[800]
-                  : Colors.white, // Highlight selected category
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).cardColor, // Use theme colors
 
               height: 64,
               width: 64,
@@ -106,14 +106,19 @@ class CategoryIconSvg extends StatelessWidget {
                 assetName,
                 width: 24,
                 height: 24,
-                color: isSelected ? Colors.white : null,
+                color: isSelected
+                    ? Colors.white
+                    : Theme.of(context).iconTheme.color,
               )),
             ),
           ),
           SizedBox(height: 8),
           Text(
             label,
-            style: TextStyle(fontSize: 11),
+            style: TextStyle(
+              fontSize: 11,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
         ],
       ),
@@ -134,13 +139,20 @@ class CategoryIcon extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: Container(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             padding: EdgeInsets.all(20),
-            child: Icon(icon, size: 24),
+            child:
+                Icon(icon, size: 24, color: Theme.of(context).iconTheme.color),
           ),
         ),
         SizedBox(height: 8),
-        Text(label, style: TextStyle(fontSize: 11)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
       ],
     );
   }

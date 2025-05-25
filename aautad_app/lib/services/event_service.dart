@@ -33,6 +33,7 @@ class EventService {
         http.get(Uri.parse('$_baseUrl/eventos/past')), // past events
       ]);
 
+
       final upcomingResponse = futures[0];
       final pastResponse = futures[1];
 
