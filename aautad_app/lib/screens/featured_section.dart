@@ -11,10 +11,10 @@ class FeaturedSection extends StatelessWidget {
           padding: Spacings.horizontalPadding,
           child: Text(
             'Destaques',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSurface),
+                color: Color(0xFF464646)),
           ),
         ),
         SizedBox(
@@ -42,7 +42,7 @@ class FeaturedSection extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: Theme.of(context).colorScheme.surface, // Back to theme surface (white)
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -57,11 +57,11 @@ class FeaturedSection extends StatelessWidget {
                         topLeft: Radius.circular(16),
                         bottomRight: Radius.circular(6),
                       ),
-                      color: Theme.of(context).colorScheme.primary),
+                      color: Theme.of(context).primaryColor),
                   child: Text(
                     'Até 19 Julho',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
@@ -95,7 +95,7 @@ class FeaturedSection extends StatelessWidget {
                   child: Text(
                     '20% Desconto',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: Colors.black,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),

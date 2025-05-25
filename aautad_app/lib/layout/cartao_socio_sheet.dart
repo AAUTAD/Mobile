@@ -151,7 +151,8 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2.0),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary, width: 2.0),
               ),
             ),
             keyboardType: TextInputType.emailAddress,

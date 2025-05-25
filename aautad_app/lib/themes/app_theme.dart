@@ -8,9 +8,9 @@ class AppTheme {
   static final lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    primaryColor: Color(0xFFF86728), // Use proper orange without opacity
+    primaryColor: AppColors.primary, // Use AppColors.primary for consistency
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Color(0xFFF86728), // Solid orange primary color
+      seedColor: AppColors.primary, // Use AppColors.primary for consistency
       brightness: Brightness.light,
       secondary: AppColors.secondary,
       surface: Colors.white,
@@ -18,7 +18,8 @@ class AppTheme {
       onBackground: Colors.black87,
       onSurface: Colors.black87,
     ),
-    scaffoldBackgroundColor: AppColors.background, // Back to original grayish background
+    scaffoldBackgroundColor:
+        AppColors.background, // Back to original grayish background
     visualDensity: VisualDensity.adaptivePlatformDensity,
     fontFamily: 'Lato',
     splashColor: Colors.transparent,
@@ -54,17 +55,17 @@ class AppTheme {
       bodyMedium: TextStyle(color: Colors.black87, fontSize: 14),
       bodySmall: TextStyle(color: Colors.black54, fontSize: 12),
       headlineSmall: TextStyle(
-        color: Colors.black, 
+        color: Colors.black,
         fontWeight: FontWeight.bold,
         fontSize: 20,
       ),
       titleLarge: TextStyle(
-        color: Colors.black, 
+        color: Colors.black,
         fontWeight: FontWeight.bold,
         fontSize: 18,
       ),
       titleMedium: TextStyle(
-        color: Colors.black87, 
+        color: Colors.black87,
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ),
@@ -73,10 +74,28 @@ class AppTheme {
     // Icon Theme
     iconTheme: IconThemeData(color: Colors.grey[700]),
 
+    // ElevatedButton Theme
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black26,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        textStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+
     // Bottom Navigation Bar Theme
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
-      selectedItemColor: Color(0xFFF86728), // Use solid orange
+      selectedItemColor: AppColors.primary, // Use consistent AppColors.primary
       unselectedItemColor: Colors.grey[600],
       elevation: 8, // Add elevation for contrast
     ),
@@ -133,6 +152,24 @@ class AppTheme {
 
     // Icon Theme
     iconTheme: IconThemeData(color: Colors.grey[400]),
+
+    // ElevatedButton Theme
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.black54,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        textStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
 
     // Bottom Navigation Bar Theme
     bottomNavigationBarTheme: BottomNavigationBarThemeData(

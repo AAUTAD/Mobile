@@ -54,10 +54,10 @@ class NewsSectionState extends State<NewsSection> {
           child: Text(
             widget.filterType == 'sports' ? 'Notícias' : 'Notícias',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           ),
         ),
         SizedBox(height: Spacings.VerticalSpacing),
