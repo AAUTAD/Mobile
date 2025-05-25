@@ -47,7 +47,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   (map) => ListTile(
                     onTap: () {
                       map.showMarker(
-                        coords: Coords(41.290100, -7.735000), // Default UTAD coordinates, you can adjust based on the location
+                        coords: Coords(41.290100,
+                            -7.735000), // Default UTAD coordinates, you can adjust based on the location
                         title: widget.event.location,
                         description: widget.event.title,
                       );
@@ -132,22 +133,23 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                   ),
                                 ),
                               ),
-                              TextButton(
-                                onPressed: _openMap,
-                                child: Text(
-                                  'VER NO MAPA',
-                                  style: TextStyle(
-                                    color: Color(0xFFE91E63),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              // TextButton(
+                              //   onPressed: _openMap,
+                              //   child: Text(
+                              //     'VER NO MAPA',
+                              //     style: TextStyle(
+                              //       color: Color(0xFFE91E63),
+                              //       fontWeight: FontWeight.bold,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                           Divider(),
                           Row(
                             children: [
-                              Icon(Icons.calendar_today, color: Colors.blueGrey),
+                              Icon(Icons.calendar_today,
+                                  color: Colors.blueGrey),
                               SizedBox(width: 8),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

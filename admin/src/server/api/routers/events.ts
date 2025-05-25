@@ -72,4 +72,19 @@ export const eventsRouter = createTRPCRouter({
                 },
             });
         }),
+    getPast: publicProcedure
+        .query(async ({ ctx }) => {
+            const now = new Date();
+
+            return ctx.db.event.findMany({
+                where: {
+                    endDate: {
+                        lt: now, // Fetch events with an end date in the past
+                    },
+                },
+                orderBy: {
+                    endDate: "desc", // Order by the most recent end date
+                },
+            });
+        }),
 });
