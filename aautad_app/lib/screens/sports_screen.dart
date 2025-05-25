@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:aautad_app/screens/news_section.dart';
 import 'package:aautad_app/screens/sport_details_page.dart';
 import 'package:aautad_app/screens/athlete_registration_page.dart';
+import 'package:aautad_app/constants/spacings.dart';
 
 class SportsScreen extends StatefulWidget {
   @override
@@ -21,107 +22,197 @@ class _SportsScreenState extends State<SportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Desporto'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                NewsSection(key: _newsSectionKey, filterType: 'sports'),
-                SizedBox(height: 20),
+          child: Column(
+            children: [
+              SizedBox(height: 60), // Top spacing for status bar
 
-                // --- First Button ---
-                Tooltip(
-                  message: 'Informações das modalidades',
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SportDetailsPage(),
-                        ),
-                      );
-                    },
-                    child: Container(
+              // NewsSection with margin on top and no horizontal margins
+              NewsSection(key: _newsSectionKey, filterType: 'sports'),
+
+              // Padded content (buttons)
+              Padding(
+                padding: Spacings.horizontalPadding, // Same as NewsSection
+                child: Column(
+                  children: [
+                    SizedBox(height: 20), // Top margin for first button
+                    // --- "Quero me tornar Atleta!" Button (Moved to top and beautified) ---
+                    Container(
                       width: double.infinity,
-                      height: 110,
+                      height: 140,
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('lib/assets/images/image.png'),
-                          fit: BoxFit.cover,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.deepOrange.shade400,
+                            Colors.orange.shade300,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orange.withOpacity(0.3),
+                            blurRadius: 12,
+                            offset: Offset(0, 6),
+                          ),
+                        ],
                       ),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'Informações',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AthleteRegistrationPage(),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.sports_soccer,
+                                        color: Colors.white,
+                                        size: 32,
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'Quero me tornar',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white.withOpacity(0.9),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Atleta!',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+              ),
 
-                SizedBox(height: 20), // Add spacing between the two buttons
+              // Padded content continues
+              Padding(
+                padding: Spacings.horizontalPadding, // Same as NewsSection
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
 
-                // --- Second Button (Duplicate of the first) ---
-                Tooltip(
-                  message:
-                      'Inscrição de Atleta', // Changed tooltip message
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AthleteRegistrationPage(), // Navigate to AthleteRegistrationPage
-                        ),
-                      );
-                    },
-                    child: Container(
+                    // --- Sport Information Button ---
+                    Container(
                       width: double.infinity,
                       height: 110,
                       decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                              'lib/assets/images/image.png'), // Same background image
-                          fit: BoxFit.cover,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.blue.shade600,
+                            Colors.blue.shade400,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            'Quero me tornar Atleta!', // Changed button text
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SportDetailsPage(),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.info_outline,
+                                        color: Colors.white,
+                                        size: 28,
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'Informações das',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white.withOpacity(0.9),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Modalidades',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

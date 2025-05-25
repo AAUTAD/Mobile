@@ -172,7 +172,8 @@ class EventCard extends StatelessWidget {
                   SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 16, color: Colors.grey[700]),
+                      Icon(Icons.location_on,
+                          size: 16, color: Colors.grey[700]),
                       SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -185,7 +186,8 @@ class EventCard extends StatelessWidget {
                   SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 16, color: Colors.grey[700]),
+                      Icon(Icons.calendar_today,
+                          size: 16, color: Colors.grey[700]),
                       SizedBox(width: 4),
                       Text(
                         _formatDate(event.startDate),
@@ -201,7 +203,8 @@ class EventCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => EventDetailScreen(event: event),
+                            builder: (context) =>
+                                EventDetailScreen(event: event),
                           ),
                         );
                       },
