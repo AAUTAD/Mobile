@@ -4,16 +4,16 @@ import '../models/event_model.dart';
 
 class EventService {
   final String _baseUrl = 'http://mobile.aautad.pt/api';
-  
+
   // Singleton pattern
   static final EventService _instance = EventService._internal();
   factory EventService() => _instance;
   EventService._internal();
-  
+
   // Cache for events
   List<EventModel>? _cachedEvents;
   DateTime? _lastFetched;
-  
+
   // Cache timeout (10 minutes)
   static const cacheValidityDuration = Duration(minutes: 10);
 
@@ -25,13 +25,14 @@ class EventService {
         return _cachedEvents!;
       }
     }
-    
+
     try {
       final response = await http.get(Uri.parse('$_baseUrl/eventos'));
 
       if (response.statusCode == 200) {
         final List<dynamic> eventsJson = json.decode(response.body);
-        _cachedEvents = eventsJson.map((json) => EventModel.fromJson(json)).toList();
+        _cachedEvents =
+            eventsJson.map((json) => EventModel.fromJson(json)).toList();
         _lastFetched = DateTime.now();
         return _cachedEvents!;
       } else {

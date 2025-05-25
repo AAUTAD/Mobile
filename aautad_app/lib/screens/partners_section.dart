@@ -102,10 +102,6 @@ class PartnerCard extends StatelessWidget {
                       partner.discount.toString(),
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
-                    Text(
-                      ' Desconto',
-                      style: TextStyle(color: Colors.white),
-                    )
                   ],
                 ),
               )
