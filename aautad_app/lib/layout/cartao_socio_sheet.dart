@@ -138,7 +138,7 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
             decoration: InputDecoration(
               hintText: 'Email',
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Theme.of(context).cardColor,
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               border: OutlineInputBorder(
@@ -185,7 +185,7 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: widget.hasToken
@@ -222,7 +222,7 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
                       style: GoogleFonts.montserrat(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -234,7 +234,7 @@ class _CartaoSocioSheetState extends State<CartaoSocioSheet> {
                         text: TextSpan(
                           style: GoogleFonts.montserrat(
                             fontSize: 16,
-                            color: Colors.black87,
+                            color: Theme.of(context).colorScheme.onSurface,
                             height: 1.5,
                           ),
                           children: [
@@ -320,7 +320,7 @@ void showCartaoSocioSheet(
                 maxHeight: MediaQuery.of(context).size.height * 0.85,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: CartaoSocioSheet(

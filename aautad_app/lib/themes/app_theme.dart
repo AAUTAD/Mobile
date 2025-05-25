@@ -134,7 +134,8 @@ class AppTheme {
 
     // Card Theme
     cardTheme: CardTheme(
-      color: Color.fromARGB(255, 42, 42, 42), // Slightly lighter than background for contrast
+      color: Color.fromARGB(
+          255, 42, 42, 42), // Slightly lighter than background for contrast
       elevation: 3,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

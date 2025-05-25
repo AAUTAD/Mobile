@@ -106,7 +106,9 @@ class CategoryIconSvg extends StatelessWidget {
                 assetName,
                 width: 24,
                 height: 24,
-                color: isSelected ? Colors.white : Theme.of(context).iconTheme.color,
+                color: isSelected
+                    ? Colors.white
+                    : Theme.of(context).iconTheme.color,
               )),
             ),
           ),
@@ -139,12 +141,13 @@ class CategoryIcon extends StatelessWidget {
           child: Container(
             color: Theme.of(context).cardColor,
             padding: EdgeInsets.all(20),
-            child: Icon(icon, size: 24, color: Theme.of(context).iconTheme.color),
+            child:
+                Icon(icon, size: 24, color: Theme.of(context).iconTheme.color),
           ),
         ),
         SizedBox(height: 8),
         Text(
-          label, 
+          label,
           style: TextStyle(
             fontSize: 11,
             color: Theme.of(context).colorScheme.onSurface,
