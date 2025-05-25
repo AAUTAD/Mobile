@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
               } else if (snapshot.hasData) {
                 return SingleChildScrollView(
                   controller: _scrollController, // Use our scroll controller
-                  padding: EdgeInsets.zero, // Remove default padding
+                  padding: EdgeInsets.only(bottom: 120), // Add bottom padding for floating nav bar
                   child: Center(
                     child: Column(
                       mainAxisAlignment:

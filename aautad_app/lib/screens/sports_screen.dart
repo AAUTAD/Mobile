@@ -22,13 +22,26 @@ class _SportsScreenState extends State<SportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Desporto',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              SizedBox(height: 60), // Top spacing for status bar
+              SizedBox(height: 20), // Top spacing for status bar
 
               // NewsSection with margin on top and no horizontal margins
               NewsSection(key: _newsSectionKey, filterType: 'sports'),

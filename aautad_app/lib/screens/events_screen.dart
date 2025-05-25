@@ -76,7 +76,7 @@ class _EventsScreenState extends State<EventsScreen> {
             }
 
             return ListView.builder(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 136), // Add bottom padding for floating nav bar (16 + 120)
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final event = snapshot.data![index];

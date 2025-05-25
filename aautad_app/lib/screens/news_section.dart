@@ -52,7 +52,7 @@ class NewsSectionState extends State<NewsSection> {
         Padding(
           padding: Spacings.horizontalPadding,
           child: Text(
-            widget.filterType == 'sports' ? 'Notícias de Desporto' : 'Notícias',
+            widget.filterType == 'sports' ? 'Notícias' : 'Notícias',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
