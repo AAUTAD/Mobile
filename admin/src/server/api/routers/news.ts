@@ -8,7 +8,7 @@ export const newsSchema = z.object({
     type: z.enum(["main", "sports"]),
     imageUrl: z.string().url().optional(),
     createdAt: z.date().default(() => new Date()),
-    updatedAt: z.date().optional(),
+    updatedAt: z.date().default(() => new Date()),
 });
 
 export const newsRouter = createTRPCRouter({
@@ -25,7 +25,11 @@ export const newsRouter = createTRPCRouter({
         }),
 
     getAll: publicProcedure.query(async ({ ctx }) => {
-        return ctx.db.news.findMany();
+        return ctx.db.news.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
      }),
 
     edit: publicProcedure
@@ -57,6 +61,17 @@ export const newsRouter = createTRPCRouter({
             })
         )
         .mutation(async ({ ctx, input }) => {
+            // First check if the news item exists
+            const existingNews = await ctx.db.news.findUnique({
+                where: {
+                    id: input.id,
+                },
+            });
+
+            if (!existingNews) {
+                throw new Error("News item not found or has already been deleted");
+            }
+
             return ctx.db.news.delete({
                 where: {
                     id: input.id,

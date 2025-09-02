@@ -17,7 +17,8 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
+    DialogFooter
 } from "~/components/ui/dialog";
 import { Pencil, Trash2, Search, CalendarIcon, Eye } from "lucide-react";
 import { useState } from "react";
@@ -41,6 +42,8 @@ export default function NoticiasPage() {
     const [editOpen, setEditOpen] = useState(false);
     const [viewContent, setViewContent] = useState<News | null>(null);
     const [viewContentOpen, setViewContentOpen] = useState(false);
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [newsToDelete, setNewsToDelete] = useState<News | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
     const [typeFilter, setTypeFilter] = useState<string | undefined>(undefined);
@@ -48,18 +51,47 @@ export default function NoticiasPage() {
     const { data: news, isLoading } = api.news.getAll.useQuery();
     const utils = api.useUtils();
 
-    const { mutate: deleteMutation } = api.news.delete.useMutation({
+    const { mutate: deleteMutation, isPending: isDeleting } = api.news.delete.useMutation({
         onSuccess: async () => {
             await utils.news.getAll.invalidate();
             toast.success("News deleted successfully");
+            setDeleteConfirmOpen(false);
+            setNewsToDelete(null);
         },
         onError: (error) => {
-            toast.error(error.message);
+            console.error("Delete error:", error);
+            toast.error(error.message || "Failed to delete news item");
+            setDeleteConfirmOpen(false);
+            setNewsToDelete(null);
         },
     });
 
-    const handleDelete = (id: string) => {
-        deleteMutation({ id });
+    const handleDelete = (newsItem: News) => {
+        setNewsToDelete(newsItem);
+        setDeleteConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!newsToDelete) {
+            toast.error("No news item selected for deletion");
+            return;
+        }
+
+        // Check if the news item still exists in our current data
+        const currentNews = news?.find(item => item.id === newsToDelete.id);
+        if (!currentNews) {
+            toast.error("This news item has already been deleted or no longer exists");
+            setDeleteConfirmOpen(false);
+            setNewsToDelete(null);
+            await utils.news.getAll.invalidate(); // Refresh the list
+            return;
+        }
+
+        if (typeof newsToDelete.id === "string") {
+            deleteMutation({ id: newsToDelete.id });
+        } else {
+            toast.error("Invalid news item id");
+        }
     };
 
     const filteredNews = news?.filter(item => {
@@ -165,6 +197,7 @@ export default function NoticiasPage() {
                                     */}<TableHead>Image</TableHead>{/*
                                     */}<TableHead>Type</TableHead>{/*
                                     */}<TableHead>Created At</TableHead>{/*
+                                    */}<TableHead>Updated At</TableHead>{/*
                                     */}<TableHead>Content</TableHead>{/*
                                     */}<TableHead>Actions</TableHead>
                                 </TableRow>
@@ -186,7 +219,10 @@ export default function NoticiasPage() {
                                             </span>
                                         </TableCell>{/*
                                         */}<TableCell className="whitespace-nowrap">
-                                            {format(new Date(item.createdAt), "PPP")}
+                                            {format(new Date(item.createdAt), "PPP p")}
+                                        </TableCell>{/*
+                                        */}<TableCell className="whitespace-nowrap">
+                                            {format(new Date(item.updatedAt), "PPP p")}
                                         </TableCell>{/*
                                         */}<TableCell className="max-w-[200px]">
                                             <div className="line-clamp-2 text-sm">
@@ -219,7 +255,7 @@ export default function NoticiasPage() {
                                                         </TooltipContent>
                                                     </Tooltip>
                                                 </TooltipProvider>{/*
-                                                */}<Dialog open={editingNews == item && editOpen} onOpenChange={setEditOpen}>
+                                                */}<Dialog open={editingNews?.id === item.id && editOpen} onOpenChange={setEditOpen}>
                                                     <DialogTrigger asChild>
                                                         <Button variant="outline" size="icon" onClick={() => {
                                                             // Cast the item to ensure type property is correctly typed as "main" | "sports"
@@ -228,6 +264,7 @@ export default function NoticiasPage() {
                                                                 type: item.type as "main" | "sports"
                                                             };
                                                             setEditingNews(typedItem);
+                                                            setEditOpen(true);
                                                         }}>
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
@@ -238,7 +275,10 @@ export default function NoticiasPage() {
                                                         </DialogHeader>
                                                         <NewsForm
                                                             news={editingNews ?? undefined}
-                                                            handleSuccess={() => setEditingNews(null)}
+                                                            handleSuccess={() => {
+                                                                setEditingNews(null);
+                                                                setEditOpen(false);
+                                                            }}
                                                         />
                                                     </DialogContent>
                                                 </Dialog>{/*
@@ -248,7 +288,7 @@ export default function NoticiasPage() {
                                                             <Button
                                                                 variant="outline"
                                                                 size="icon"
-                                                                onClick={() => handleDelete(item.id)}
+                                                                onClick={() => handleDelete({ ...item, type: item.type as "main" | "sports" })}
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
                                                             </Button>
@@ -285,6 +325,7 @@ export default function NoticiasPage() {
                         )}
                         <div className="text-sm text-muted-foreground flex items-center gap-3">
                             <div>Created: {viewContent && format(new Date(viewContent.createdAt), "PPP p")}</div>
+                            <div>Updated: {viewContent && format(new Date(viewContent.updatedAt), "PPP p")}</div>
                             {viewContent?.type && (
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${viewContent.type === 'sports' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
                                     {viewContent.type === 'sports' ? 'Sports' : 'Main'}
@@ -293,6 +334,45 @@ export default function NoticiasPage() {
                         </div>
                         <div className="whitespace-pre-wrap">{viewContent?.content || ''}</div>
                     </div>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Confirm Delete</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <p>Are you sure you want to delete this news item?</p>
+                        {newsToDelete && (
+                            <div className="mt-3 p-3 bg-muted rounded-md">
+                                <p className="font-medium">{newsToDelete.title}</p>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                    {newsToDelete.content.length > 100 
+                                        ? newsToDelete.content.substring(0, 100) + '...'
+                                        : newsToDelete.content
+                                    }
+                                </p>
+                            </div>
+                        )}
+                        <p className="text-sm text-destructive mt-3">This action cannot be undone.</p>
+                    </div>
+                    <DialogFooter>
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setDeleteConfirmOpen(false)}
+                            disabled={isDeleting}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            variant="destructive" 
+                            onClick={confirmDelete}
+                            disabled={isDeleting}
+                        >
+                            {isDeleting ? "Deleting..." : "Delete"}
+                        </Button>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </SidebarInset>

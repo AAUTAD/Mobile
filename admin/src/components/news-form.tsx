@@ -208,6 +208,7 @@ export function NewsForm({ news, handleSuccess }: NewsFormProps) {
             } else {
                 createNewsMutation.mutate({
                     ...data,
+                    createdAt: new Date(), // Always set createdAt to current time for new items
                     imageUrl: imageUrl ? imageUrl.split("?")[0] : undefined,
                 });
             }
@@ -279,6 +280,26 @@ export function NewsForm({ news, handleSuccess }: NewsFormProps) {
                         </FormItem>
                     )}
                 />
+                
+                <FormField
+                    control={form.control}
+                    name="updatedAt"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Updated At</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="datetime-local"
+                                    value={field.value ? new Date(field.value.getTime() - field.value.getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                                    onChange={(e) => field.onChange(new Date(e.target.value))}
+                                    className="w-full"
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                
                 <div className="space-y-2">
                     <FormLabel>Image</FormLabel>
                     <div className="grid gap-4 md:grid-cols-2 items-center">

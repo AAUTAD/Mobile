@@ -123,7 +123,7 @@ class NewsSectionState extends State<NewsSection> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        item.createdAt
+                                        item.updatedAt
                                             .toLocal()
                                             .toString()
                                             .split(' ')[0],
