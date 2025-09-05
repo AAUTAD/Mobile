@@ -12,7 +12,7 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primary, // Use AppColors.primary for consistency
       brightness: Brightness.light,
-      secondary: AppColors.secondary,
+      secondary: const Color.fromARGB(255, 3, 119, 236),
       surface: Colors.white,
       background: AppColors.background, // Back to original grayish background
       onBackground: Colors.black87,

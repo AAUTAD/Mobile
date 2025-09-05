@@ -12,12 +12,10 @@ class Destination {
   final String image;
 }
 
-const basePath = 'assets/images/destinations/';
-
 const destinations = [
   Destination(label: 'Home', icon: Icons.home),
   Destination(label: 'Eventos', icon: Icons.event),
-  Destination(label: 'Desporto', icon: Icons.map_outlined),
+  Destination(label: 'Desporto', icon: Icons.sports_baseball_outlined),
   Destination(label: 'Cartão', icon: Icons.qr_code),
 ];
 

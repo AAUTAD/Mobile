@@ -1,3 +1,4 @@
+import 'package:aautad_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:aautad_app/models/sport_info.dart';
 import 'package:aautad_app/services/api_service.dart';
@@ -42,7 +43,9 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Erro ao carregar modalidades: ${snapshot.error}'));
+                return Center(
+                    child: Text(
+                        'Erro ao carregar modalidades: ${snapshot.error}'));
               } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 final sports = snapshot.data!;
                 return ListView.builder(
@@ -51,14 +54,16 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
                     final sport = sports[index];
                     return Card(
                       elevation: 3,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       margin: const EdgeInsets.only(bottom: 16.0),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (sport.imageUrl != null && sport.imageUrl!.isNotEmpty)
+                            if (sport.imageUrl != null &&
+                                sport.imageUrl!.isNotEmpty)
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
                                 child: Image.network(
@@ -68,26 +73,39 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                            if (sport.imageUrl != null && sport.imageUrl!.isNotEmpty) SizedBox(height: 12),
+                            if (sport.imageUrl != null &&
+                                sport.imageUrl!.isNotEmpty)
+                              SizedBox(height: 12),
                             Text(
                               sport.name,
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 10),
-                            if (sport.location != null && sport.location!.isNotEmpty)
-                              _buildInfoRow(context, Icons.location_on, 'Local:', sport.location!),
+                            if (sport.location != null &&
+                                sport.location!.isNotEmpty)
+                              _buildInfoRow(context, Icons.location_on,
+                                  'Local:', sport.location!),
                             _buildInfoRow(
                               context,
                               Icons.people,
                               'Responsáveis:',
-                              (sport.persons != null && sport.persons!.isNotEmpty)
-                                  ? sport.persons!.map((p) => p.name).join(', ')
+                              (sport.persons != null &&
+                                      sport.persons!.isNotEmpty)
+                                  ? sport.persons!
+                                      .map((p) => fixEncoding(p.name))
+                                      .join(', ')
                                   : 'N/A',
                             ),
-                            if (sport.details != null && sport.details!.isNotEmpty)
-                              _buildInfoRow(context, Icons.info_outline, 'Detalhes:', sport.details!),
+                            if (sport.details != null &&
+                                sport.details!.isNotEmpty)
+                              _buildInfoRow(context, Icons.info_outline,
+                                  'Detalhes:', fixEncoding(sport.details!)),
                             if (sport.link != null && sport.link!.isNotEmpty)
-                              _buildInfoRow(context, Icons.link, 'Link:', sport.link!),
+                              _buildInfoRow(
+                                  context, Icons.link, 'Link:', sport.link!),
                           ],
                         ),
                       ),
@@ -95,7 +113,8 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
                   },
                 );
               }
-              return Center(child: Text('Nenhuma modalidade desportiva encontrada.'));
+              return Center(
+                  child: Text('Nenhuma modalidade desportiva encontrada.'));
             },
           ),
         ),
@@ -103,7 +122,8 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildInfoRow(
+      BuildContext context, IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -116,7 +136,9 @@ class _SportDetailsPageState extends State<SportDetailsPage> {
               text: TextSpan(
                 style: Theme.of(context).textTheme.bodyMedium,
                 children: [
-                  TextSpan(text: '$label ', style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: '$label ',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   TextSpan(text: value),
                 ],
               ),

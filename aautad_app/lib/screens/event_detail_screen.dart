@@ -186,6 +186,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       'body': Style(
                         fontSize: FontSize(16),
                       ),
+                      'br': Style(
+                        height: Height(0), // Reduce the height of <br> elements
+                      ),
                     },
                   ),
                   SizedBox(height: 40),
